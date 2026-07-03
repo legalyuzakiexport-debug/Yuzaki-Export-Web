@@ -1,0 +1,123 @@
+/* procurar_social.css */
+
+.search-header {
+    margin: 40px 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1px solid #2a3447;
+    padding-bottom: 20px;
+}
+
+.btn-back-social {
+    color: #66c0f4;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 10px;
+    transition: 0.3s;
+}
+
+.btn-back-social:hover { color: #fff; }
+
+.search-header h2 { font-size: 1.8rem; margin: 0; }
+.search-header h2 span { color: #66c0f4; }
+
+.results-count { color: #8b929a; font-size: 0.9rem; margin: 0; }
+
+/* Lista de Resultados */
+.results-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 900px;
+}
+
+.user-result-card {
+    background: #151a24;
+    border: 1px solid #2a3447;
+    border-radius: 12px;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.user-result-card:hover {
+    border-color: #66c0f4;
+    background: #1c2331;
+}
+
+.user-brand {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-avatar-large {
+    width: 65px;
+    height: 65px;
+    background: linear-gradient(135deg, #66c0f4, #1c2331);
+    color: #0b0e14;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: 900;
+}
+
+.user-details h3 { margin: 0; font-size: 1.3rem; color: #fff; }
+.user-details p { margin: 5px 0 0; color: #8b929a; font-size: 0.85rem; }
+
+/* Botões e Badges */
+.btn-action-social {
+    padding: 10px 25px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 0.9rem;
+}
+
+.btn-action-social.add {
+    background: #66c0f4;
+    color: #0b0e14;
+}
+
+.btn-action-social.add:hover {
+    background: #fff;
+    transform: scale(1.05);
+}
+
+.btn-action-social.respond {
+    background: transparent;
+    border: 1px solid #ffa600;
+    color: #ffa600;
+}
+
+.status-badge {
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-badge.friend { color: #2ecc71; background: rgba(46, 204, 113, 0.1); }
+.status-badge.pending { color: #8b929a; background: rgba(139, 146, 154, 0.1); }
+
+/* No Results */
+.no-results {
+    text-align: center;
+    padding: 100px 0;
+    color: #8b929a;
+}
+
+.no-results i { font-size: 4rem; opacity: 0.2; margin-bottom: 20px; }
+.btn-retry {
+    display: inline-block;
+    margin-top: 20px;
+    color: #66c0f4;
+    text-decoration: underline;
+}

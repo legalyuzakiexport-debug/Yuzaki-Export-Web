@@ -1,0 +1,190 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+
+:root {
+    --yuzaki-blue: #66c0f4;
+    --yuzaki-blue-hover: #80d1ff;
+    --yuzaki-black: #0b0e11;
+    --yuzaki-dark-grey: #171a21;
+    --yuzaki-glass: rgba(22, 32, 45, 0.85);
+    --border-line: rgba(102, 192, 244, 0.15);
+    --glow: 0 0 20px rgba(102, 192, 244, 0.3);
+}
+
+body {
+    background: radial-gradient(circle at top, #1b2838 0%, #0b0e11 100%);
+    color: #c6d4df;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+}
+
+.publish-container {
+    max-width: 1200px;
+    margin: 120px auto 60px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 40px;
+}
+
+/* Card Principal com Efeito Glass */
+.publish-card {
+    background: var(--yuzaki-glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-line);
+    border-radius: 8px;
+    padding: 50px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+    position: relative;
+}
+
+/* Header com estilo Gaming */
+.publish-header {
+    margin-bottom: 45px;
+}
+
+.publish-header h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.2rem;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+.publish-header h2 span {
+    color: var(--yuzaki-blue);
+    text-shadow: var(--glow);
+}
+
+.publish-header p {
+    color: #8f98a0;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+/* Inputs Estilo Stealth */
+.form-group {
+    margin-bottom: 30px;
+}
+
+.form-group label {
+    display: block;
+    color: var(--yuzaki-blue);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.form-group input, 
+.form-group textarea, 
+.form-group select {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid #2a3447;
+    border-radius: 4px;
+    padding: 16px 20px;
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-group input:focus, 
+.form-group textarea:focus, 
+.form-group select:focus {
+    outline: none;
+    border-color: var(--yuzaki-blue);
+    background: rgba(0, 0, 0, 0.6);
+    box-shadow: var(--glow);
+}
+
+/* Dropdown e Select custom */
+select option {
+    background: var(--yuzaki-dark-grey);
+    color: #fff;
+}
+
+/* Área de Upload (Drag & Drop) */
+.upload-zone-pro {
+    border: 2px dashed #2a3447;
+    background: rgba(102, 192, 244, 0.02);
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.upload-zone-pro:hover {
+    border-color: var(--yuzaki-blue);
+    background: rgba(102, 192, 244, 0.05);
+}
+
+.upload-zone-pro i {
+    font-size: 3rem;
+    color: var(--yuzaki-blue);
+    margin-bottom: 15px;
+    opacity: 0.7;
+}
+
+/* Botão Ultra CTA */
+.btn-yuzaki-launch {
+    width: 100%;
+    padding: 22px;
+    background: linear-gradient(90deg, #66c0f4 0%, #4facfe 100%);
+    color: #05070a;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 800;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: 0.4s;
+    margin-top: 20px;
+}
+
+.btn-yuzaki-launch:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(102, 192, 244, 0.4);
+    filter: brightness(1.1);
+}
+
+/* Sidebar Informática */
+.sidebar-card {
+    background: rgba(22, 32, 45, 0.6);
+    border: 1px solid var(--border-line);
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.sidebar-card h3 {
+    font-family: 'Orbitron', sans-serif;
+    color: #fff;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-line);
+    padding-bottom: 10px;
+}
+
+.sidebar-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-card li {
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    line-height: 1.6;
+    color: #8f98a0;
+    display: flex;
+    gap: 10px;
+}
+
+.sidebar-card li i { color: var(--yuzaki-blue); }
+
+@media (max-width: 992px) {
+    .publish-container { grid-template-columns: 1fr; }
+}

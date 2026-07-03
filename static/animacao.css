@@ -1,0 +1,86 @@
+/* Centralização Absoluta */
+.intro-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: radial-gradient(circle at center, #0a111a 0%, #05070a 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.4s ease, visibility 0.4s;
+}
+
+.intro-overlay.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Contentor interno para garantir que o texto e a barra seguem a logo */
+.intro-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.intro-logo {
+    width: 320px; /* Ajustado para a logo YE que enviaste */
+    height: auto;
+    filter: drop-shadow(0 0 15px rgba(102, 192, 244, 0.5));
+    transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    margin-bottom: 20px;
+}
+
+.loader-wrapper {
+    width: 250px;
+    height: 3px;
+    background: rgba(102, 192, 244, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.loader-line {
+    width: 0%;
+    height: 100%;
+    background: #66c0f4;
+    box-shadow: 0 0 15px #66c0f4;
+    /* A animação só deve começar quando o overlay estiver ativo */
+}
+
+.intro-overlay.active .loader-line {
+    animation: fillBar 2s forwards ease-in-out;
+}
+
+.status-text {
+    color: #66c0f4;
+    font-family: 'Orbitron', sans-serif; /* Certifica-te que importaste esta fonte */
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.7;
+}
+
+/* --- Efeito de Saída (Warp Drive / Descolagem) --- */
+.intro-overlay.exit .intro-logo {
+    transform: translateY(-120vh) scale(0.5);
+    filter: drop-shadow(0 50px 30px #66c0f4) blur(4px);
+    opacity: 0;
+}
+
+/* Opcional: faz o texto e a barra desaparecerem suavemente na saída */
+.intro-overlay.exit .loader-wrapper,
+.intro-overlay.exit .status-text {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+@keyframes fillBar {
+    0% { width: 0%; }
+    100% { width: 100%; }
+}

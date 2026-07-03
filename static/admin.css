@@ -1,0 +1,146 @@
+/* --- ESTILO ESPECÍFICO DO PAINEL ADMIN --- */
+
+.admin-header {
+    margin-bottom: 40px;
+}
+
+.admin-section {
+    padding: 0;
+    overflow: hidden;
+    background: var(--card-bg); /* Garante que o fundo do card se mantém */
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.section-header {
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.section-header h3 {
+    font-size: 1.1rem;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.count-badge {
+    background: rgba(71, 191, 255, 0.1);
+    color: var(--primary);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+/* --- TABELA --- */
+.table-container {
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.admin-table th {
+    padding: 15px 25px;
+    background: rgba(0, 0, 0, 0.3);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+}
+
+.admin-table td {
+    padding: 15px 25px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.admin-table tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.game-name {
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.tag-author {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: var(--primary);
+}
+
+/* --- BOTÕES DE AÇÃO --- */
+.btn-action {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 800;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+/* Estilo para o botão Eliminar (Jogos) e Banir (Users) */
+.btn-action.delete {
+    color: #ff4b2b;
+    border: 1px solid rgba(255, 75, 43, 0.3);
+    background: rgba(255, 75, 43, 0.05);
+}
+
+.btn-action.delete:hover {
+    background: #ff4b2b;
+    color: white;
+    border-color: #ff4b2b;
+    box-shadow: 0 0 15px rgba(255, 75, 75, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Ajuste para quando o botão está desativado ou é apenas um texto */
+.admin-table td span.tag-author {
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.1);
+}
+.tag-author {
+    background: rgba(102, 192, 244, 0.1);
+    color: #66c0f4;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-action.delete {
+    background: rgba(255, 75, 43, 0.1);
+    color: #ff4b2b;
+    border: 1px solid rgba(255, 75, 43, 0.2);
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-action.delete:hover {
+    background: #ff4b2b;
+    color: white;
+}

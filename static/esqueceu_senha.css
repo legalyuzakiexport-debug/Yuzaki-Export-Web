@@ -1,0 +1,104 @@
+/* RESET E DEFINIÇÕES BASE */
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
+
+body {
+    background: radial-gradient(circle at top left, #2a475e 0%, #1b2838 80%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    color: #c7d5e0;
+}
+
+/* O CARTÃO ESCURO (ESTILO STEAM) */
+.container {
+    background-color: #171a21;
+    padding: 40px;
+    border-radius: 4px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+h2 {
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    font-weight: 300;
+    font-size: 1.5rem;
+}
+
+h2 span { 
+    color: #66c0f4; 
+    font-weight: bold; 
+}
+
+p {
+    font-size: 13px;
+    color: #8f98a0;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+/* FORMULÁRIO */
+form { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+}
+
+input {
+    background-color: #32353c;
+    border: 1px solid #000;
+    border-radius: 2px;
+    padding: 12px;
+    color: #fff;
+    outline: none;
+    width: 100%;
+    transition: border 0.3s;
+}
+
+input:focus { 
+    border: 1px solid #66c0f4; 
+}
+
+button {
+    background: linear-gradient(to right, #47bfff 0%, #1a44c2 100%);
+    border: none;
+    color: #fff;
+    padding: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-top: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+button:hover { 
+    filter: brightness(1.2); 
+}
+
+.footer-link {
+    margin-top: 25px;
+    font-size: 12px;
+}
+
+.footer-link a {
+    color: #8f98a0;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-link a:hover { 
+    color: #fff; 
+    text-decoration: underline; 
+}

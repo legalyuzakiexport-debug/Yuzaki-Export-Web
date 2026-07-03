@@ -1,0 +1,298 @@
+/* =========================================
+   LOJA CSS - YUZAKI EXPORT (ESTILO PREMIUM)
+   ========================================= */
+
+:root {
+    --premium-gold: #f1c40f;
+    --premium-glow: rgba(241, 196, 15, 0.4);
+    --premium-purple: #8e44ad;
+    --border: rgba(255, 255, 255, 0.1);
+    --primary: #66c0f4;
+}
+
+/* --- 1. CABEÇALHO E TÍTULOS --- */
+.store-title span {
+    background: linear-gradient(to right, #f1c40f, #f39c12);
+    background-clip: text; 
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 15px rgba(241, 196, 15, 0.2);
+    font-weight: 800;
+}
+
+/* --- 2. GRID E CARDS DE JOGOS --- */
+.game-card.premium {
+    border: 1.5px solid rgba(241, 196, 15, 0.3) !important;
+    background: linear-gradient(145deg, #161b22 0%, #1c152e 100%) !important;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.game-card.premium:hover {
+    border-color: var(--premium-gold) !important;
+    box-shadow: 0 0 30px var(--premium-glow);
+    transform: translateY(-8px);
+}
+
+.price-tag {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--premium-gold);
+    color: #000;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 900;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+    z-index: 10;
+}
+
+.premium-thumb {
+    height: 160px;
+    background: linear-gradient(45deg, #0d1117, #1a1225);
+    display: flex;
+    align-items: center;      
+    justify-content: center;
+    font-size: 3.5rem;
+    border-bottom: 1px solid rgba(241, 196, 15, 0.15);
+}
+
+/* --- 3. BOTÕES DA LOJA --- */
+.btn-buy {
+    display: block;
+    text-align: center;
+    background: linear-gradient(to right, #f1c40f, #f39c12);
+    color: #000 !important;
+    text-decoration: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-weight: 800;
+    margin: 15px 0 5px 0;
+    transition: 0.3s;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.btn-buy:hover {
+    filter: brightness(1.2);
+    box-shadow: 0 0 20px var(--premium-glow);
+}
+
+.btn-adquirido-loja {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    background: rgba(76, 209, 55, 0.1);
+    color: #4cd137;
+    border: 1px solid #4cd137;
+    border-radius: 8px;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* --- 4. BARRA DE PESQUISA (ARRUMADA) --- */
+.search-bar-container {
+    margin: 40px auto;
+    padding: 0 20px;
+    max-width: 800px; /* Largura ideal para não ficar esticada */
+}
+
+.search-bar-container form {
+    display: flex;
+    align-items: center;
+    gap: 65px;
+    background: rgba(23, 29, 37, 0.6);
+    padding: 10px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+}
+
+.search-bar-container .input-wrapper {
+    position: relative;
+    flex: 1; /* Faz o input ocupar o espaço restante */
+}
+
+.search-bar-container input {
+    width: 100%;
+    height: 48px;
+    padding: 0 15px 0 45px;
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: white;
+    font-size: 0.95rem;
+    outline: none;
+    transition: 0.3s;
+}
+
+/* Lupa dentro do input */
+.search-bar-container .input-wrapper::before {
+    content: '\f002';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+    opacity: 0.6;
+}
+
+.search-bar-container input:focus {
+    border-color: var(--primary);
+    background: #161b22;
+}
+
+.btn-search {
+    height: 48px;
+    padding: 0 25px;
+    background: var(--primary);
+    color: #0b0e14;
+    border: none;
+    border-radius: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.3s;
+    white-space: nowrap;
+}
+
+.btn-search:hover {
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 192, 244, 0.3);
+}
+
+.btn-clear {
+    height: 48px;
+    width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 71, 87, 0.1);
+    color: #ff4757;
+    border: 1px solid rgba(255, 71, 87, 0.2);
+    border-radius: 12px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn-clear:hover {
+    background: #ff4757;
+    color: #fff;
+}
+.premium-thumb {
+    height: 180px; /* Um pouco mais alto para dar presença */
+    background: linear-gradient(45deg, #0d1117, #1a202c);
+    display: flex;
+    align-items: center;      
+    justify-content: center;
+    font-size: 4rem; /* Ícone grande e imponente */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: 0.3s;
+}
+
+.game-card:hover .premium-thumb {
+    background: linear-gradient(45deg, #161b22, #232d3f);
+    font-size: 4.5rem; /* Efeito de "pulso" no ícone ao passar o rato */
+}
+/* --- CORREÇÃO DO LINK ROXO E MENSAGEM VAZIA --- */
+.empty-results p {
+    color: #8b949e;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+}
+
+.empty-results a {
+    color: var(--primary) !important; /* Usa o azul #66c0f4 definido no teu :root */
+    text-decoration: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+/* Força a cor a manter-se azul mesmo após o clique */
+.empty-results a:visited {
+    color: var(--primary) !important;
+}
+
+.empty-results a:hover {
+    color: #fff !important;
+    text-shadow: 0 0 10px var(--primary);
+    text-decoration: underline;
+}
+/* --- 5. SISTEMA DE PROMOÇÕES (NOVO) --- */
+
+/* Estilo para a Price-Tag quando há desconto */
+.price-tag.promo-active {
+    background: #eb4d4b !important; /* Vermelho vibrante para destacar a promo */
+    color: #fff !important;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 5px 15px !important;
+    border-radius: 12px !important;
+    line-height: 1.2;
+    box-shadow: 0 0 20px rgba(235, 77, 75, 0.4);
+}
+
+/* O badge flutuante de percentagem (-20%) */
+.discount-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: #4cd137; /* Verde neon */
+    color: #000;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-weight: 900;
+    font-size: 0.85rem;
+    z-index: 15;
+    font-family: 'Orbitron', sans-serif;
+    box-shadow: 0 4px 15px rgba(76, 209, 55, 0.4);
+    animation: pulse-promo 2s infinite;
+}
+
+/* Animação para o badge não passar despercebido */
+@keyframes pulse-promo {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(76, 209, 55, 0.7); }
+    70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(76, 209, 55, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(76, 209, 55, 0); }
+}
+
+/* Tag de status "PROMOÇÃO" no rodapé do card */
+.tag.promo-status {
+    border-color: #eb4d4b !important;
+    color: #eb4d4b !important;
+    background: rgba(235, 77, 75, 0.1) !important;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    animation: glow-red 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow-red {
+    from { box-shadow: 0 0 2px #eb4d4b; }
+    to { box-shadow: 0 0 8px #eb4d4b; }
+}
+
+/* Ajuste para o preço original riscado */
+.old-price-text {
+    text-decoration: line-through;
+    font-size: 0.7rem;
+    opacity: 0.8;
+    color: #fff;
+}
+
+.new-price-text {
+    font-size: 1.1rem;
+    font-weight: 900;
+}

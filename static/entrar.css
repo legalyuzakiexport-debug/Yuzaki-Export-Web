@@ -1,0 +1,203 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle at top left, #2a475e 0%, #1b2838 80%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    color: #c7d5e0;
+}
+
+.container {
+    background-color: #171a21;
+    padding: 40px;
+    border-radius: 4px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+}
+
+h2 {
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+    font-weight: 300;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input {
+    background-color: #32353c;
+    border: 1px solid #000;
+    border-radius: 2px;
+    padding: 12px;
+    color: #fff;
+    outline: none;
+    transition: border 0.3s;
+}
+
+input:focus {
+    border: 1px solid #66c0f4;
+}
+
+button {
+    background: linear-gradient(to right, #47bfff 0%, #1a44c2 100%);
+    border: none;
+    color: #fff;
+    padding: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-top: 10px;
+}
+
+button:hover {
+    filter: brightness(1.2);
+}
+
+.footer-link {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #8f98a0;
+}
+
+.footer-link a {
+    color: #fff;
+    text-decoration: underline;
+}
+/* Container para o link "Esqueci minha senha" centralizado */
+.forgot-container {
+    text-align: center; /* Centraliza o texto */
+    margin-top: -5px;   /* Ajuste para não ficar muito longe da senha */
+}
+
+.forgot-link {
+    font-size: 12px;
+    color: #8f98a0;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block; /* Permite efeitos de transform se quiseres */
+}
+
+.forgot-link:hover {
+    color: #66c0f4; 
+    text-shadow: 0 0 8px rgba(102, 192, 244, 0.3);
+}
+/* --- SELETOR DE IDIOMAS (CANTO SUPERIOR DIREITO) --- */
+.language-selector {
+    position: absolute;
+    top: 25px;
+    right: 30px;
+    z-index: 2000; /* Garante que fica por cima de tudo */
+}
+
+.lang-btn {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(102, 192, 244, 0.3);
+    color: #ffffff;
+    padding: 10px 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px); /* Efeito de vidro */
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.lang-btn:hover {
+    background: rgba(102, 192, 244, 0.15);
+    border-color: #66c0f4;
+    box-shadow: 0 0 15px rgba(102, 192, 244, 0.2);
+}
+
+.lang-options {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: #0b141d; /* Fundo escuro sólido para contraste */
+    border: 1px solid rgba(102, 192, 244, 0.3);
+    list-style: none;
+    padding: 8px 0;
+    margin: 0;
+    border-radius: 12px;
+    width: 160px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+/* Mostra as opções ao passar o rato */
+.language-selector:hover .lang-options {
+    display: block;
+    animation: slideDown 0.3s ease-out;
+}
+
+.lang-options li {
+    padding: 12px 15px;
+    color: #e0e6ed;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.lang-options li:hover {
+    background: rgba(102, 192, 244, 0.2);
+    color: #66c0f4;
+}
+
+.lang-options img, .lang-btn img {
+    width: 22px;
+    height: auto;
+    border-radius: 3px;
+    object-fit: cover;
+}
+
+/* --- AJUSTE DO FOOTER (PARA O LINK FUNCIONAR) --- */
+.footer-link p {
+    color: #8f98a0;
+    font-size: 14px;
+}
+
+.footer-link a {
+    color: #66c0f4;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 5px;
+    transition: color 0.2s;
+}
+
+.footer-link a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* --- ANIMAÇÕES --- */
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsividade: No telemóvel o seletor fica mais pequeno */
+@media (max-width: 480px) {
+    .language-selector {
+        top: 15px;
+        right: 15px;
+    }
+    .lang-btn span {
+        display: none; /* Esconde o texto "PT" e deixa só a bandeira no mobile */
+    }
+}

@@ -1,0 +1,165 @@
+/* dev_acao.css - Estilo Oficial Yuzaki Export */
+:root {
+    --yuzaki-blue: #55bceb; /* Azul do teu botão 'Editar Nome' */
+    --yuzaki-dark-bg: #0b0e11; /* Fundo escuro do teu site */
+    --yuzaki-card: #16191c; /* Cor dos teus cards de perfil */
+    --yuzaki-border: #2d3238;
+    --text-gray: #94a3b8;
+}
+
+body {
+    background-color: var(--yuzaki-dark-bg);
+    color: white;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.acao-container {
+    max-width: 850px;
+    margin: 100px auto 50px;
+    padding: 40px;
+    background: var(--yuzaki-card);
+    border-radius: 12px;
+    border: 1px solid var(--yuzaki-border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.back-link {
+    color: var(--yuzaki-blue);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 25px;
+    font-size: 0.9rem;
+}
+
+h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    margin-bottom: 35px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+h2 span {
+    color: var(--yuzaki-blue);
+}
+
+/* Inputs ao estilo do site */
+.form-group {
+    margin-bottom: 22px;
+}
+
+label {
+    display: block;
+    color: var(--text-gray);
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 14px;
+    background: #1f2329;
+    border: 1px solid #333b45;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--yuzaki-blue);
+    background: #16191c;
+}
+
+/* Secção de Promoção Discreta */
+.promo-section {
+    background: rgba(85, 188, 235, 0.03);
+    border: 1px dashed rgba(85, 188, 235, 0.3);
+    padding: 25px;
+    border-radius: 10px;
+    margin: 35px 0;
+}
+
+.promo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+}
+
+/* Botão Guardar - Estilo 'Editar Nome' */
+.btn-save {
+    background: var(--yuzaki-blue);
+    color: #0b0e11;
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: 0.2s;
+}
+
+.btn-save:hover {
+    background: #73cdff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(85, 188, 235, 0.3);
+}
+
+/* Zona de Perigo */
+.danger-zone {
+    margin-top: 50px;
+    padding: 25px;
+    border-radius: 10px;
+    background: #1a1414;
+    border: 1px solid #3d2121;
+}
+
+.danger-zone h3 {
+    color: #f56565;
+    margin-top: 0;
+    font-family: 'Orbitron';
+}
+
+.btn-delete {
+    background: transparent;
+    color: #f56565;
+    border: 1px solid #f56565;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-delete:hover {
+    background: #f56565;
+    color: white;
+}
+.edit-select {
+    appearance: none; /* Remove o estilo padrão */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.edit-select:focus {
+    border-color: var(--yuzaki-green);
+    outline: none;
+}

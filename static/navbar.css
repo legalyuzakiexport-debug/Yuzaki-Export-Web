@@ -1,0 +1,264 @@
+/* --- BARRA DE NAVEGAÇÃO NEON GLASS --- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5%;
+    height: 80px;
+    /* Efeito de vidro escuro */
+    background: rgba(23, 29, 37, 0.95);
+    backdrop-filter: blur(10px); 
+    
+    /* Linha inferior com brilho neon */
+    border-bottom: 2px solid rgba(102, 192, 244, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+/* --- LOGO ESTILIZADO --- */
+.nav-logo a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    gap: 15px;
+}
+
+.logo-img {
+    background: linear-gradient(135deg, #66c0f4, #1a7abb);
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    color: #171d25;
+    font-size: 1.2rem;
+    box-shadow: 0 0 15px rgba(102, 192, 244, 0.4);
+    transform: rotate(-5deg); /* Dá um toque único */
+}
+
+.brand-text {
+    font-family: 'Rajdhani', sans-serif; /* Sugestão de fonte tech */
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 1px;
+}
+
+.brand-text span {
+    color: #66c0f4;
+    text-transform: uppercase;
+}
+
+/* --- LINKS DE NAVEGAÇÃO --- */
+.nav-links {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 30px;
+}
+
+.nav-links a {
+    color: #c6d4df;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+/* Linha animada debaixo dos links */
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background: #66c0f4;
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: white;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+/* --- O ESPECIAL: LINK DOURADO (GRATIDÃO) --- */
+.nav-gold {
+    color: #ffd700 !important;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    padding: 8px 15px;
+    border-radius: 20px;
+    background: rgba(255, 215, 0, 0.05);
+}
+
+.nav-gold:hover {
+    background: rgba(255, 215, 0, 0.15) !important;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    color: #fff !important;
+}
+
+/* --- DROPDOWN LUXO --- */
+.dropdown {
+    position: relative;
+}
+
+.dropbtn {
+    background: rgba(102, 192, 244, 0.08);
+    color: #66c0f4;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    border: 1px solid rgba(102, 192, 244, 0.2);
+    border-radius: 50px; /* Estilo pílula */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.3s;
+}
+
+.dropbtn:hover {
+    background: rgba(102, 192, 244, 0.2);
+    border-color: #66c0f4;
+}
+
+.dropdown-content {
+    display: block; /* Para animação funcionar */
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    right: 0;
+    top: 120%;
+    background: #1b2838;
+    min-width: 220px;
+    border-radius: 12px;
+    border: 1px solid rgba(102, 192, 244, 0.2);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    overflow: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+
+.dropdown:hover .dropdown-content {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-content a {
+    color: #c6d4df;
+    padding: 14px 20px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.dropdown-content a i {
+    color: #66c0f4;
+    font-size: 1.1rem;
+}
+
+.dropdown-content a:hover {
+    background: rgba(102, 192, 244, 0.1);
+    color: white;
+    padding-left: 25px; /* Efeito de deslize no hover */
+}
+
+/* Divisores e Labels */
+.dropdown-label {
+    background: rgba(0,0,0,0.2);
+    font-size: 10px;
+    color: #556772;
+    padding: 8px 20px;
+    letter-spacing: 2px;
+}
+
+.logout-link {
+    color: #ff4b2b !important;
+}
+
+.logout-link:hover {
+    background: rgba(255, 75, 43, 0.1) !important;
+}
+
+/* Badge do Carrinho Animada */
+.cart-badge {
+    background: #ff4b2b;
+    color: white;
+    font-size: 10px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -8px;
+    right: -12px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 75, 43, 0.7); }
+    70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 75, 43, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 75, 43, 0); }
+}
+.notification-badge {
+    background-color: #ff4b2b;
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 50%;
+    position: relative;
+    top: -10px;
+    left: -5px;
+    font-weight: bold;
+    border: 2px solid #151a24;
+}
+
+.notification-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification-link .count {
+    background: #ff4b2b;
+    padding: 0px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+}
+.dropdown-content a {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Define um espaço fixo e elegante entre ícone e texto */
+    padding: 12px 20px;
+    text-decoration: none;
+    color: white;
+    justify-content: flex-start; /* Garante que tudo comece da esquerda */
+}
+
+/* Se usaste a classe específica para o social que te dei antes, remove o space-between */
+.nav-social-link, .nav-notif-link {
+    display: flex !important;
+    justify-content: flex-start !important; /* Muda de space-between para flex-start */
+    gap: 15px;
+}
+
+/* Para manter a badge do lado direito se houver notificações */
+.badge-social, .badge-count {
+    margin-left: auto; /* Isto empurra APENAS o número para a ponta direita */
+}

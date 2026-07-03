@@ -1,0 +1,213 @@
+/* --- CONFIGURAÇÕES BASE --- */
+.game-details-container {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 60px;
+}
+
+/* --- COLUNA ESQUERDA --- */
+.game-media {
+    position: sticky;
+    top: 100px;
+}
+
+.visual-card {
+    background: #161b22;
+    border-radius: 20px;
+    border: 1px solid rgba(71, 191, 255, 0.15);
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+}
+
+.main-icon-display {
+    height: 300px;
+    background: linear-gradient(135deg, #1c2533 0%, #0d1117 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8rem;
+}
+
+.price-action-card {
+    padding: 25px;
+    background: rgba(255,255,255,0.02);
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.price-label {
+    display: block;
+    font-size: 0.7rem;
+    color: #8b949e;
+    letter-spacing: 1px;
+}
+
+.price-value {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.btn-buy-now {
+    width: 100%;
+    background: linear-gradient(90deg, #47bfff, #1a7abb);
+    color: #000;
+    border: none;
+    padding: 18px;
+    font-weight: 900;
+    border-radius: 12px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-buy-now.acquired {
+    background: rgba(76, 209, 55, 0.1);
+    color: #4cd137;
+    border: 1px solid #4cd137;
+    cursor: default;
+}
+
+/* --- QUICK STATS --- */
+.quick-stats {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+}
+
+.stat-item i { color: #47bfff; }
+.stat-item span { display: block; font-size: 0.75rem; color: #8b949e; }
+.author-name { color: #47bfff !important; }
+
+/* --- CONTEÚDO PRINCIPAL --- */
+.game-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.1;
+}
+
+.game-subtitle { color: #8b949e; font-size: 1.1rem; }
+
+.content-divider {
+    height: 1px;
+    background: linear-gradient(to right, #47bfff, transparent);
+    margin: 30px 0;
+}
+
+.tag-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    border: 1px solid;
+    margin-right: 8px;
+}
+
+.tag-badge.premium { color: #f1c40f; border-color: #f1c40f; }
+.tag-badge.free { color: #4cd137; border-color: #4cd137; }
+.tag-badge.verified { color: #8b949e; border-color: rgba(255,255,255,0.2); }
+
+.section-title { color: #fff; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+.section-title i { color: #47bfff; }
+
+.description-text { color: #acb2b8; line-height: 1.8; font-size: 1.05rem; }
+
+/* --- REVIEWS --- */
+.reviews-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.review-card {
+    background: rgba(255,255,255,0.02);
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.review-user { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; color: #fff; }
+.review-body { color: #8b949e; font-style: italic; line-height: 1.5; }
+.review-date { font-size: 0.7rem; color: #555; display: block; margin-top: 10px; }
+
+.empty-reviews {
+    background: rgba(255,255,255,0.02);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    border: 1px dashed rgba(255,255,255,0.1);
+    color: #555;
+}
+
+@media (max-width: 900px) {
+    .game-details-container { grid-template-columns: 1fr; gap: 30px; }
+    .game-media { position: static; }
+    .reviews-grid { grid-template-columns: 1fr; }
+}
+/* --- SISTEMA DE PROMOÇÕES --- */
+
+.promo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: rgba(255, 255, 255, 0.4); /* Fica meio transparente sobre o fundo escuro */
+    font-size: 1.1rem;
+}
+
+.discount-badge {
+    background: #ff4757;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    animation: pulse-promo 2s infinite;
+}
+
+.price-value.sale {
+    color: #2ed573;
+    text-shadow: 0 0 10px rgba(46, 213, 115, 0.2);
+}
+
+.promo-timer {
+    display: block;
+    font-size: 0.8rem;
+    color: #ffa502;
+    margin-top: 8px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+/* Animação para o badge de desconto saltar à vista */
+@keyframes pulse-promo {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Ajuste para botão adquirido */
+.btn-buy-now.acquired {
+    background: #2f3542 !important;
+    cursor: not-allowed;
+    opacity: 0.7;
+}

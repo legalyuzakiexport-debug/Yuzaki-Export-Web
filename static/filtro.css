@@ -1,0 +1,120 @@
+/* DESIGN DE CONTROLOS DA LOJA */
+.store-controls {
+    background: rgba(13, 17, 23, 0.8);
+    border: 1px solid rgba(102, 192, 244, 0.1);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 40px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.main-filter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Pesquisa */
+.search-group .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-group i {
+    position: absolute;
+    left: 20px;
+    color: #66c0f4;
+}
+
+.search-group input {
+    width: 100%;
+    padding: 15px 15px 15px 50px;
+    background: #05070a;
+    border: 1px solid #1b2838;
+    border-radius: 10px;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.search-group input:focus {
+    border-color: #66c0f4;
+    box-shadow: 0 0 15px rgba(102, 192, 244, 0.2);
+    outline: none;
+}
+
+/* Linha de Filtros */
+.filters-row {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    min-width: 200px;
+}
+
+.filter-item label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    color: #66c0f4;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.filter-item select {
+    background: #0d121a;
+    color: white;
+    border: 1px solid #1b2838;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Botões */
+.filter-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-apply {
+    background: #66c0f4;
+    color: #05070a;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 800;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-apply:hover {
+    background: #fff;
+    box-shadow: 0 0 20px rgba(102, 192, 244, 0.4);
+}
+
+.btn-reset {
+    background: rgba(255, 75, 43, 0.1);
+    color: #ff4b2b;
+    border: 1px solid #ff4b2b;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.btn-reset:hover {
+    background: #ff4b2b;
+    color: white;
+}

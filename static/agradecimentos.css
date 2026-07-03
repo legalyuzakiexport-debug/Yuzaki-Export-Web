@@ -1,0 +1,137 @@
+:root {
+    --gold: #d4af37;
+    --primary: #66c0f4;
+    --bg-dark: #05070a;
+    --card-bg: rgba(255, 255, 255, 0.03);
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.special-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(102, 192, 244, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.thanks-container {
+    max-width: 900px;
+    padding: 40px;
+    z-index: 10;
+    animation: fadeInUp 1s ease;
+}
+
+.thanks-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.badge {
+    background: rgba(102, 192, 244, 0.1);
+    color: var(--primary);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    border: 1px solid var(--primary);
+}
+
+h1 {
+    font-size: 3rem;
+    margin: 20px 0;
+    font-weight: 300;
+}
+
+h1 span {
+    color: var(--primary);
+    font-weight: 700;
+    text-shadow: 0 0 20px rgba(102, 192, 244, 0.4);
+}
+
+.divider {
+    height: 2px;
+    width: 100px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    margin: 0 auto;
+}
+
+/* Cartões */
+.thanks-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 24px;
+    backdrop-filter: blur(10px);
+    transition: 0.4s;
+    margin-bottom: 30px;
+}
+
+.thanks-card.highlight {
+    border-color: rgba(102, 192, 244, 0.3);
+    background: linear-gradient(145deg, rgba(102, 192, 244, 0.05), transparent);
+    text-align: center;
+}
+
+.icon-main {
+    font-size: 3rem;
+    color: var(--primary);
+    margin-bottom: 20px;
+}
+
+.thanks-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+h2, h3 { color: var(--primary); }
+
+p {
+    line-height: 1.8;
+    color: #aeb9c1;
+    font-size: 1.1rem;
+}
+
+.quote-author {
+    display: block;
+    margin-top: 20px;
+    font-style: italic;
+    color: var(--gold);
+}
+
+/* Botão */
+.btn-back {
+    display: inline-block;
+    margin-top: 40px;
+    padding: 12px 30px;
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 50px;
+    transition: 0.3s;
+}
+
+.btn-back:hover {
+    background: #fff;
+    color: #000;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .thanks-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 2rem; }
+}

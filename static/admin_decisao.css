@@ -1,0 +1,154 @@
+/* admin_decisao.css */
+
+:root {
+    --bg-main: #0b0e14;
+    --card-bg: #151a24;
+    --yuzaki-red: #ff4b2b;
+    --yuzaki-blue: #66c0f4;
+    --yuzaki-orange: #ffa600;
+    --text-primary: #ffffff;
+    --text-secondary: #8b929a;
+    --border-color: #2a3447;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.overlay {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.decision-card {
+    background: var(--card-bg);
+    width: 100%;
+    max-width: 500px;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--border-color);
+    border-top: 4px solid var(--yuzaki-red); /* Cor de destaque inicial */
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.card-header i {
+    font-size: 3rem;
+    color: var(--yuzaki-red);
+    margin-bottom: 15px;
+}
+
+.card-header h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.6rem;
+    margin: 0;
+    color: #fff;
+}
+
+.card-header p {
+    color: var(--text-secondary);
+    margin-top: 8px;
+}
+
+/* Campos do Formulário */
+.campo {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--yuzaki-blue);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+select, textarea {
+    width: 100%;
+    padding: 12px;
+    background: #0b0e14;
+    border: 1px solid var(--border-color);
+    color: #fff;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--yuzaki-blue);
+    box-shadow: 0 0 8px rgba(102, 192, 244, 0.2);
+}
+
+textarea {
+    resize: none;
+    font-family: inherit;
+}
+
+/* Botões */
+.acoes {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-voltar {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    background: transparent;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-weight: 600;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-voltar:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.btn-perigo {
+    flex: 2;
+    padding: 12px;
+    background: var(--yuzaki-red);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s, box-shadow 0.3s;
+}
+
+.btn-perigo:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
