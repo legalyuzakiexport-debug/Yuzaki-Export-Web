@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YE — Procurar Jogadores</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='social.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='procurar_social.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <main class="container-main">
+        <header class="search-header">
+            <div class="header-info">
+                <a href="{{ url_for('Social') }}" class="btn-back-social"><i class="fas fa-chevron-left"></i> Voltar</a>
+                <h2>Resultados para: <span>"{{ query }}"</span></h2>
+            </div>
+            <p class="results-count">{{ users|length }} utilizadores encontrados</p>
+        </header>
+
+        <section class="results-container">
+            {% for u in users %}
+            <div class="user-result-card">
+                <div class="user-brand">
+                    <div class="user-avatar-large">{{ u.nome_utilizador[0]|upper }}</div>
+                    <div class="user-details">
+                        <h3>{{ u.nome_utilizador }}</h3>
+                        <p><i class="far fa-calendar-alt"></i> Na plataforma desde {{ u.data_registo.strftime('%Y') }}</p>
+                    </div>
+                </div>
+
+                <div class="user-interaction">
+                    {% if u.estado_amizade == 'aceite' %}
+                        <span class="status-badge friend"><i class="fas fa-check-circle"></i> Amigos</span>
+                    {% elif u.estado_amizade == 'pendente' %}
+                        {% if u.id_requisitante == session['user_id'] %}
+                            <span class="status-badge pending"><i class="fas fa-hourglass-half"></i> Pedido Enviado</span>
+                        {% else %}
+                            <a href="{{ url_for('Social') }}" class="btn-action-social respond">Responder ao Pedido</a>
+                        {% endif %}
+                    {% else %}
+                        <a href="{{ url_for('AdicionarAmigo', id_alvo=u.id) }}" class="btn-action-social add">
+                            <i class="fas fa-user-plus"></i> Adicionar Amigo
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <div class="no-results">
+                <i class="fas fa-user-slash"></i>
+                <h3>Ops! Ninguém encontrado.</h3>
+                <p>Não encontrámos nenhum jogador com o nome "{{ query }}".</p>
+                <a href="{{ url_for('Social') }}" class="btn-retry">Tentar novamente</a>
+            </div>
+            {% endfor %}
+        </section>
+    </main>
+
+</body>
+</html>

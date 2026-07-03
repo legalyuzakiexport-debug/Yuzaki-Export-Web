@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reconhecimento | Yuzaki Export</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='agradecimentos.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="special-overlay"></div>
+    
+    <div class="thanks-container">
+        <header class="thanks-header">
+            <span class="badge">PAP 2026</span>
+            <h1>Notas de <span>Gratidão</span></h1>
+            <div class="divider"></div>
+        </header>
+
+        <section class="thanks-content">
+            <div class="thanks-card highlight">
+                <i class="fas fa-code-branch icon-main"></i>
+                <h2>À Professora Anabela Rocha</h2>
+                <p>
+                    Expresso o meu sincero agradecimento por ter sido a peça-chave no meu desenvolvimento como programador. 
+                    Agradeço à Professora Anabela por não apenas transmitir o conhecimento técnico, mas por me desafiar 
+                    a pensar de forma lógica e estruturada. Sem a sua exigência e os alicerces que me deu nas aulas de 
+                    programação, o desenvolvimento da <b>Yuzaki Export</b> não teria sido possível.
+                </p>
+                <span class="quote-author">— Pelo rigor e dedicação ao ensino da programação.</span>
+            </div>
+
+            <div class="thanks-grid">
+                <div class="thanks-card">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>Corpo Docente</h3>
+                    <p>A todos os professores que contribuíram para a minha formação, moldando o meu pensamento crítico e profissionalismo ao longo deste percurso escolar.</p>
+                </div>
+
+                <div class="thanks-card">
+                    <i class="fas fa-rocket"></i>
+                    <h3>A Missão Yuzaki</h3>
+                    <p>Este projeto é o reflexo de tudo o que aprendi. A Yuzaki Export nasceu da vontade de aplicar tecnologia num sistema de gestão eficiente e moderno.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="thanks-footer">
+            <p>Desenvolvido com dedicação por <b>Mário Silva</b></p>
+            <a href="{{ url_for('Index') }}" class="btn-back">Voltar à Plataforma</a>
+        </footer>
+    </div>
+</body>
+</html>

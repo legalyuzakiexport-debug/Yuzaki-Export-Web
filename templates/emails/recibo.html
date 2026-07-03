@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Recibo Yuzaki Export</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #0b0e14; font-family: 'Segoe UI', Arial, sans-serif;">
+    <div style="background-color: #0b0e14; padding: 40px 10px; color: #c7d5e0;">
+        <div style="max-width: 650px; margin: auto; background-color: #151921; border: 1px solid #2d343f; border-radius: 8px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.4);">
+            
+            <div style="background: linear-gradient(135deg, #151921, #1e2530); padding: 35px; text-align: center; border-bottom: 1px solid #2d343f;">
+                <h1 style="color: #4dabf7; margin: 0; letter-spacing: 4px; font-size: 26px; text-transform: uppercase; font-weight: 800;">Yuzaki <span style="color: #ffffff;">Export</span></h1>
+                <p style="color: #8892b0; font-size: 11px; margin-top: 8px; text-transform: uppercase; letter-spacing: 1px;">Documento de Venda Digital #YE-{{ num_fatura }}</p>
+            </div>
+
+            <div style="padding: 40px;">
+                <p style="color: #ffffff; font-size: 16px;">Olá <strong>{{ nome_cliente }}</strong>,</p>
+                <p style="color: #8892b0; line-height: 1.6;">Confirmamos com sucesso a tua transação efetuada em <strong>{{ data_atual }}</strong>. Os teus novos jogos já foram adicionados à tua biblioteca digital.</p>
+                
+                <table style="width: 100%; border-collapse: collapse; margin: 30px 0;">
+                    <thead>
+                        <tr style="color: #4dabf7; font-size: 11px; text-transform: uppercase; border-bottom: 2px solid #2d343f;">
+                            <th style="text-align: left; padding: 10px 5px;">Artigo</th>
+                            <th style="text-align: right; padding: 10px 5px;">Base (s/ IVA)</th>
+                            <th style="text-align: right; padding: 10px 5px;">IVA (23%)</th>
+                            <th style="text-align: right; padding: 10px 5px;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for jogo in lista_jogos %}
+                        {# Usamos os valores já calculados pelo Python para evitar erros de promoção #}
+                        {% set p_total = jogo.preco_pago | float %}
+                        {% set p_base = p_total / 1.23 %}
+                        {% set p_iva = p_total - p_base %}
+                        
+                        <tr style="border-bottom: 1px solid rgba(45, 52, 63, 0.5);">
+                            <td style="padding: 15px 5px; color: #ffffff; font-size: 14px; font-weight: 500;">
+                                {{ jogo.titulo }}
+                                {% if jogo.foi_promo %}
+                                    <span style="display:block; font-size: 10px; color: #a3cf06; text-transform: uppercase;">Promoção Aplicada</span>
+                                {% endif %}
+                            </td>
+                            <td style="padding: 15px 5px; text-align: right; color: #8892b0; font-size: 13px;">{{ "%.2f"|format(p_base) }}€</td>
+                            <td style="padding: 15px 5px; text-align: right; color: #8892b0; font-size: 13px;">{{ "%.2f"|format(p_iva) }}€</td>
+                            <td style="padding: 15px 5px; text-align: right; color: #ffffff; font-weight: bold; font-size: 14px;">{{ "%.2f"|format(p_total) }}€</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <div style="background: rgba(0,0,0,0.2); padding: 25px; border-radius: 12px; border: 1px solid #2d343f;">
+                    <table style="width: 100%; color: #8892b0; font-size: 14px;">
+                        <tr>
+                            <td style="padding: 5px 0;">Total Base Tributável:</td>
+                            <td style="text-align: right; padding: 5px 0;">{{ "%.2f"|format(total_base) }}€</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0; border-bottom: 1px solid #2d343f; padding-bottom: 15px;">Total Imposto (IVA 23%):</td>
+                            <td style="text-align: right; padding: 5px 0; border-bottom: 1px solid #2d343f; padding-bottom: 15px;">{{ "%.2f"|format(total_iva) }}€</td>
+                        </tr>
+                        <tr style="font-size: 24px; font-weight: bold; color: #ffffff;">
+                            <td style="padding-top: 20px;">TOTAL PAGO:</td>
+                            <td style="padding-top: 20px; text-align: right; color: #a3cf06;">{{ "%.2f"|format(total_geral) }}€</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div style="text-align: center; margin-top: 40px;">
+                    <a href="https://yuzaki-export.com/biblioteca" style="background-color: #4dabf7; color: #0b0e14; padding: 15px 35px; text-decoration: none; border-radius: 8px; font-weight: bold; text-transform: uppercase; font-size: 13px; display: inline-block;">Aceder à Minha Biblioteca</a>
+                </div>
+            </div>
+
+            <div style="background-color: #0e1218; padding: 25px; text-align: center; font-size: 11px; color: #4b5563; border-top: 1px solid #2d343f;">
+                <p style="margin: 0 0 5px 0;">© 2026 <strong>Yuzaki Export Portugal</strong>. Todos os direitos reservados.</p>
+                <p style="margin: 0;">Este é um recibo oficial de licença digital. Mantém este e-mail para os teus registos.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

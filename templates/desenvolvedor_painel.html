@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yuzaki Export — Painel do Criador</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='desenvolvedor_painel.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-logo">
+        <a href="{{ url_for('Index') }}">
+            <div class="logo-img">YE</div>
+            <h1 class="brand-text">Yuzaki <span>Export</span></h1>
+        </a>
+    </div>
+    <ul class="nav-links">
+        <li><a href="{{ url_for('Index') }}">Início</a></li>
+        <li><a href="{{ url_for('Loja') }}">Loja</a></li>
+        <li><a href="{{ url_for('Perfil') }}" class="active">Voltar ao Perfil</a></li>
+    </ul>
+</nav>
+
+<main class="dev-container">
+    <header class="dev-header">
+        <div class="header-title">
+            <h2 class="brand-text">Painel de <span>Desenvolvedor</span></h2>
+            <p>Gerencia as tuas criações e acompanha os teus rendimentos reais.</p>
+        </div>
+        <button class="btn-publish-new" onclick="window.location.href='/publicar'">
+            <i class="fas fa-plus"></i> Publicar Novo Jogo
+        </button>
+    </header>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-label">Vendas Totais</span>
+            <div class="stat-value-group">
+                <span class="stat-number">{{ total_vendas }}</span>
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+        </div>
+        
+        <div class="stat-card highlight">
+            <span class="stat-label">Teu Lucro (80%)</span>
+            <div class="stat-value-group">
+                <span class="stat-number">{{ "%.2f"|format(saldo_dev) }}€</span>
+                <i class="fas fa-wallet"></i>
+            </div>
+            <p class="stat-subtext">Pronto para levantamento em 14 dias após venda.</p>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-label">Taxa Yuzaki (20%)</span>
+            <div class="stat-value-group">
+                <span class="stat-number" style="color: #718096;">{{ "%.2f"|format(taxa_yuzaki) }}€</span>
+                <i class="fas fa-server"></i>
+            </div>
+        </div>
+    </div>
+
+    <section class="games-list-section">
+        <h3 class="section-title"><i class="fas fa-gamepad"></i> Meus Jogos Publicados</h3>
+        <div class="table-responsive">
+            <table class="dev-table">
+                <thead>
+                    <tr>
+                        <th>JOGO</th>
+                        <th>PREÇO UN.</th>
+                        <th>VENDAS</th>
+                        <th>TEU GANHO (80%)</th>
+                        <th>ESTADO</th>
+                        <th>AÇÕES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for jogo in jogos %}
+                    <tr>
+                        <td class="game-name-cell">
+    <div style="display: flex; flex-direction: column; gap: 4px;">
+        <strong>{{ jogo['titulo'] }}</strong>
+        <span style="font-size: 0.65rem; color: #66c0f4; background: rgba(102, 192, 244, 0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(102, 192, 244, 0.2); width: fit-content; text-transform: uppercase; font-weight: 700;">
+            <i class="fas fa-tag" style="font-size: 0.5rem;"></i> 
+            {{ jogo['categoria_nome'] if jogo['categoria_nome'] else 'Sem Categoria' }}
+        </span>
+    </div>
+</td>
+                        <td>{{ "%.2f"|format(jogo['preco']|float) }}€</td>
+                        <td>{{ jogo.get('vendas_count', 0) }}</td>
+                        <td class="profit-cell">
+                            {{ "%.2f"|format((jogo.get('vendas_count', 0)|float) * (jogo['preco']|float) * 0.8) }}€
+                        </td>
+                        <td><span class="status-badge online">Ativo</span></td>
+                    <td>
+                        <a href="{{ url_for('DevAcao', id=jogo['id']) }}" class="btn-action edit" style="text-decoration: none;">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="empty-msg">Ainda não publicaste nenhum jogo na Yuzaki Export.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+</body>
+</html>

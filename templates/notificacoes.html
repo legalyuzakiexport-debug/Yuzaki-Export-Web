@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yuzaki Export — Notificações</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='notificacoes.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        </nav>
+
+    <main class="container-main">
+        <header class="page-header">
+            <h2 class="brand-text">Centro de <span>Notificações</span></h2>
+            <p>Acompanha as atualizações dos teus jogos e conta.</p>
+        </header>
+
+        <section class="notifications-wrapper">
+            {% if notificacoes %}
+                {% for n in notificacoes %}
+                <div class="notification-card {% if not n.lida %}unread{% endif %}" id="notif-{{ n.id }}">
+                    <div class="notif-icon">
+                        {% if 'Moderação' in n.titulo or 'Eliminado' in n.titulo or 'Ação' in n.titulo %}
+                            <i class="fas fa-gavel"></i>
+                        {% else %}
+                            <i class="fas fa-bell"></i>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="notif-content">
+                        <div class="notif-header">
+                            <h3>{{ n.titulo }}</h3>
+                            <span class="notif-date">{{ n.data_envio.strftime('%d %b, %H:%M') }}</span>
+                        </div>
+                        <p class="notif-message">{{ n.mensagem }}</p>
+                    </div>
+
+                    <div class="notif-actions">
+                        {% if not n.lida %}
+                        <a href="{{ url_for('MarcarLida', id=n.id) }}" class="btn-notif-action mark-read" title="Marcar como lida">
+                            <i class="fas fa-check"></i>
+                        </a>
+                        {% endif %}
+                        
+                        <button onclick="abrirModalResposta('{{ n.id }}', '{{ n.titulo }}')" class="btn-notif-action reply" title="Responder à Administração">
+                            <i class="fas fa-reply"></i>
+                        </button>
+                    </div>
+                    
+                    {% if not n.lida %}
+                        <span class="unread-dot"></span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-envelope-open"></i>
+                    <p>Não tens nenhuma notificação de momento.</p>
+                    <a href="{{ url_for('Index') }}" class="btn-back">Voltar ao Início</a>
+                </div>
+            {% endif %}
+        </section>
+    </main>
+
+    <div id="modal-resposta" class="modal-notif" style="display:none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-reply"></i> Responder: <span id="reply-title"></span></h3>
+                <button class="close-modal" onclick="fecharModal()">&times;</button>
+            </div>
+            <form action="{{ url_for('ResponderNotificacao') }}" method="POST">
+                <input type="hidden" name="notificacao_id" id="reply-id">
+                <div class="campo">
+                    <label>A tua mensagem para o suporte:</label>
+                    <textarea name="mensagem_resposta" required placeholder="Escreve aqui a tua dúvida ou contestação..."></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" onclick="fecharModal()" class="btn-cancel">Cancelar</button>
+                    <button type="submit" class="btn-send">Enviar para Administração</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function abrirModalResposta(id, titulo) {
+            document.getElementById('reply-id').value = id;
+            document.getElementById('reply-title').innerText = titulo;
+            document.getElementById('modal-resposta').style.display = 'flex';
+        }
+
+        function fecharModal() {
+            document.getElementById('modal-resposta').style.display = 'none';
+        }
+
+        // Fechar modal ao clicar fora dele
+        window.onclick = function(event) {
+            let modal = document.getElementById('modal-resposta');
+            if (event.target == modal) {
+                fecharModal();
+            }
+        }
+    </script>
+
+</body>
+</html>

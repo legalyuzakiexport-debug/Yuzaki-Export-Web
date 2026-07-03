@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <title>Dashboard de Publicação — Yuzaki</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='publicar.css') }}">
+</head>
+<body>
+
+<main class="publish-container">
+    <section class="publish-card">
+        <div class="publish-header">
+            <h2>DEPLO<span>Y</span> SYSTEM</h2>
+            <p>Inicializa o upload do teu projeto para a rede Yuzaki Export.</p>
+        </div>
+
+        <form action="{{ url_for('Publicar') }}" method="POST" enctype="multipart/form-data" class="publish-form">
+            
+            <div class="form-group">
+                <label><i class="fas fa-heading"></i> Identificação do Projeto</label>
+                <input type="text" name="titulo" placeholder="Ex: Project Zero: Resurrection" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-align-left"></i> Documentação / Manifest</label>
+                <textarea name="descricao" rows="8" placeholder="O que torna o teu jogo especial?"></textarea>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="form-group">
+                    <label><i class="fas fa-th-large"></i> Categoria</label>
+                    <select name="categoria_id" required>
+                        <option value="" disabled selected>Selecionar categoria...</option>
+                        {% for cat in categorias %}
+                            <option value="{{ cat.id }}">{{ cat.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-euro-sign"></i> Valor de Venda</label>
+                    <input type="number" name="preco" step="0.01" value="0.00" min="0">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-archive"></i> Pacote de Distribuição</label>
+                <div class="upload-zone-pro" onclick="document.getElementById('file-real').click()">
+                    <input type="file" name="arquivo" id="file-real" hidden required onchange="updateLabel(this)">
+                    <i class="fas fa-file-export"></i>
+                    <p id="file-display">Arraste o seu .zip ou .rar aqui</p>
+                    <small style="color: #444;">Máximo recomendado: 500MB</small>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-yuzaki-launch">
+                Confirmar e Lançar Projeto
+            </button>
+        </form>
+    </section>
+
+    <aside class="publish-sidebar">
+        <div class="sidebar-card">
+            <h3><i class="fas fa-terminal"></i> Verificações</h3>
+            <ul>
+                <li><i class="fas fa-shield-virus"></i> Scan de segurança automático na nuvem.</li>
+                <li><i class="fas fa-check-double"></i> Revisão de tags e categoria por moderadores.</li>
+                <li><i class="fas fa-globe"></i> Distribuição instantânea para servidores europeus.</li>
+            </ul>
+        </div>
+
+        <div class="sidebar-card" style="border-bottom: 3px solid #ff4b2b;">
+            <h3><i class="fas fa-exclamation-triangle"></i> Importante</h3>
+            <p style="font-size: 0.8rem; color: #8f98a0; line-height: 1.4;">
+                Certifica-te que o ficheiro executável está na pasta raíz do arquivo comprimido para evitar erros de lançamento.
+            </p>
+        </div>
+    </aside>
+</main>
+
+<script>
+function updateLabel(input) {
+    const label = document.getElementById('file-display');
+    if (input.files.length > 0) {
+        label.innerHTML = `<span style="color: #66c0f4; font-weight: bold;">UPLOAD READY:</span><br>${input.files[0].name}`;
+    }
+}
+</script>
+
+</body>
+</html>

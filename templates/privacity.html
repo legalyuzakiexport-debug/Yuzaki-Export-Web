@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Yuzaki Export — Termos Legais e Políticas</title>
+    <meta name="description" content="Documentação legal completa da Yuzaki Export: Termos de Uso, Privacidade (RGPD), Modelo de Comissões e Reembolsos." />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='privacity.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="wrap">
+        <header class="main-header">
+            <div class="logo-container">
+                <div class="logo-icon">YE</div>
+                <div class="brand">
+                    <h1>Yuzaki Export</h1>
+                    <p>Documentação Legal Integrada</p>
+                </div>
+            </div>
+
+            {% if session.get('user_id') %}
+                <a href="{{ url_for('Index') }}" class="btn-back"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a>
+            {% else %}
+                <a href="{{ url_for('Registar') }}" class="btn-back"><i class="fas fa-user-plus"></i> Criar Conta</a>
+            {% endif %}
+        </header>
+
+        <main class="card">
+            <div class="meta-info">
+                <span class="badge">Versão 3.0 — Atualizado em: 24 Março 2026</span>
+                <span class="jurisdiction">Sede e Jurisdição: Portugal / União Europeia</span>
+            </div>
+
+            <nav class="toc-container">
+                <h3>Índice do Acordo Unificado</h3>
+                <div class="toc-links">
+                    <a href="#termos" class="toc-link"><span>01</span> Termos de Serviço</a>
+                    <a href="#privacidade" class="toc-link"><span>02</span> Privacidade e RGPD</a>
+                    <a href="#vendas" class="toc-link"><span>03</span> Modelo Económico (80/20)</a>
+                    <a href="#publicacao" class="toc-link"><span>04</span> Propriedade e Direitos de Autor</a>
+                    <a href="#reembolso" class="toc-link"><span>05</span> Reembolsos e Litígios</a>
+                </div>
+            </nav>
+
+            <div class="content-body">
+
+                <section id="termos" class="legal-section">
+                    <h2><span class="sec-num">1</span> Termos de Serviço e Utilização da Rede</h2>
+                    
+                    <article>
+                        <h3>1.1 Aceitação e Vinculação Jurídica</h3>
+                        <p>A utilização da plataforma Yuzaki Export rege-se pelos presentes Termos e Condições Unificados. Ao clicar em "Aceito", criar uma conta ou navegar no site, o utilizador celebra um contrato legalmente vinculativo. Se não concordar com qualquer cláusula deste documento, deverá cessar imediatamente a utilização da plataforma.</p>
+                    </article>
+
+                    <article>
+                        <h3>1.2 Modificações do Contrato</h3>
+                        <p>A Yuzaki Export reserva-se o direito de alterar estes termos a qualquer momento para refletir mudanças legislativas ou melhorias do serviço. Alterações substanciais serão notificadas por e-mail ou no painel do utilizador. A continuidade do uso após tais alterações constitui aceitação dos novos termos.</p>
+                    </article>
+
+                    <article>
+                        <h3>1.3 Requisitos de Hardware e Compatibilidade</h3>
+                        <p>É da exclusiva responsabilidade do utilizador verificar se o seu sistema informático cumpre os requisitos mínimos de hardware e software listados na página de cada jogo antes de efetuar a compra ou download. A Yuzaki Export não garante a compatibilidade com sistemas modificados, emuladores não oficiais ou computadores obsoletos.</p>
+                    </article>
+
+                    <article>
+                        <h3>1.4 Suspensão, Banimento e Abuso de Sistema</h3>
+                        <p>Qualquer tentativa de comprometer a segurança da infraestrutura (injeção SQL, ataques DDoS, engenharia reversa do site, scraping agressivo de dados) resultará no banimento imediato do IP e da conta. Preservaremos os logs e os dados do prevaricador para entrega às autoridades criminais portuguesas e europeias se necessário.</p>
+                    </article>
+                </section>
+
+                <hr class="section-divider">
+
+                <section id="privacidade" class="legal-section">
+                    <h2><span class="sec-num">2</span> Política de Privacidade e Proteção de Dados (RGPD)</h2>
+                    
+                    <article>
+                        <h3>2.1 Base Legal para o Tratamento</h3>
+                        <p>Processamos os seus dados pessoais com base no <strong>Artigo 6.º, n.º 1, alínea b) do RGPD</strong> (necessário para a execução de um contrato). Sem estes dados, é tecnicamente impossível processar downloads, manter licenças de jogos ou emitir faturas/recibos válidos.</p>
+                    </article>
+
+                    <article>
+                        <h3>2.2 Minimização e Especificação dos Dados Recolhidos</h3>
+                        <ul class="styled-list">
+                            <li><strong>Dados de Autenticação:</strong> Nome de utilizador e e-mail (necessários para login e recuperação).</li>
+                            <li><strong>Dados Financeiros e Faturação:</strong> Histórico de transações. Os dados de cartão ou MB Way são geridos por gateways bancárias externas e nunca passam pelos nossos servidores.</li>
+                            <li><strong>Dados de Segurança (Logs):</strong> Endereço IP, tipo de dispositivo e navegador, recolhidos exclusivamente para deteção de fraudes e acessos geográficos suspeitos.</li>
+                        </ul>
+                    </article>
+
+                    <article>
+                        <h3>2.3 Criptografia e Segurança das Palavras-Passe</h3>
+                        <p>A Yuzaki Export emprega os mais altos padrões de segurança. As palavras-passe nunca são armazenadas em texto simples. São processadas através de algoritmos matemáticos de <em>hashing</em> com <em>salting</em>, tornando-as ilegíveis até para os administradores da base de dados.</p>
+                    </article>
+
+                    <article>
+                        <h3>2.4 Direitos do Titular (Acesso e Esquecimento)</h3>
+                        <p>Em conformidade com a lei portuguesa <strong>Lei n.º 58/2019</strong>, tem o direito de solicitar a Portabilidade, Retificação ou o Esquecimento definitivo da sua conta. No entanto, dados de compras associados a faturas fiscais serão retidos pelo prazo legal obrigatório de 10 anos impostos pela Autoridade Tributária.</p>
+                    </article>
+                </section>
+
+                <hr class="section-divider">
+
+                <section id="vendas" class="legal-section">
+                    <h2><span class="sec-num">3</span> Governança Económica e Modelo de Comissões</h2>
+                    
+                    <article>
+                        <h3>3.1 Transparência de Receitas (Modelo 80/20)</h3>
+                        <p>Para apoiar os criadores independentes e manter os servidores operacionais, a Yuzaki Export adota uma repartição clara e fixa para todas as vendas líquidas realizadas na plataforma:</p>
+                        
+                        <div class="revenue-card">
+                            <div class="rev-item highlight">
+                                <span class="rev-label">Desenvolvedor (Criador)</span>
+                                <span class="rev-value">80%</span>
+                                <p>Fração creditada ao autor do software pela sua propriedade intelectual e desenvolvimento.</p>
+                            </div>
+                            <div class="rev-item">
+                                <span class="rev-label">Yuzaki Export</span>
+                                <span class="rev-value">20%</span>
+                                <p>Taxa fixa de intermediação para pagar tráfego de download, marketing, hosting e processamento bancário.</p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article>
+                        <h3>3.2 Tratamento Fiscal do IVA (União Europeia)</h3>
+                        <p>Como empresa baseada na União Europeia, as transações estão sujeitas ao IVA (Imposto sobre o Valor Acrescentado) do país do comprador (em Portugal, 23%). O preço exibido na Loja já é o preço final de consumo. O IVA é recolhido e entregue ao Estado antes de a divisão 80/20 ser efetuada no saldo líquido restante.</p>
+                    </article>
+
+                    <article>
+                        <h3>3.3 Proteção contra Estornos (Chargebacks)</h3>
+                        <p>Para salvaguardar o sistema de fraudes financeiras, os fundos gerados pelas vendas ficam congelados por um ciclo de segurança de 14 dias no painel do desenvolvedor, antes de estarem passíveis de levantamento por transferência bancária.</p>
+                    </article>
+                </section>
+
+                <hr class="section-divider">
+
+                <section id="publicacao" class="legal-section">
+                    <h2><span class="sec-num">4</span> Direitos de Autor e Condições de Publicação</h2>
+                    
+                    <article>
+                        <h3>4.1 Garantias do Desenvolvedor</h3>
+                        <p>Ao submeter ficheiros à Yuzaki Export, o publicador garante juridicamente que: (a) detém os direitos de autor do jogo ou licenças comerciais de terceiros (música, arte e código); (b) o software não viola marcas registadas; (c) o executável não contém malware, adware ou mineradores de criptomoeda.</p>
+                    </article>
+
+                    <div class="warning-box">
+                        <p><strong>Aviso de Tolerância Zero:</strong> A publicação de software malicioso resultará no banimento permanente, retenção do dinheiro ilegalmente obtido e entrega dos dados pessoais do publicador ao Ministério Público de Portugal.</p>
+                    </div>
+
+                    <article>
+                        <h3>4.2 Licença de Distribuição</h3>
+                        <p>O autor retém todos os seus direitos. Concede apenas à Yuzaki Export uma licença não exclusiva para alojar, comprimir, distribuir e promover o jogo nos seus canais de vendas e redes sociais.</p>
+                    </article>
+                </section>
+
+                <hr class="section-divider">
+
+                <section id="reembolso" class="legal-section">
+                    <h2><span class="sec-num">5</span> Direito de Livre Resolução e Devoluções</h2>
+                    
+                    <article>
+                        <h3>5.1 Fornecimento de Conteúdo Digital Não-Físico</h3>
+                        <p>Atenção: Ao abrigo da exceção legal prevista no <strong>Artigo 17.º do Decreto-Lei n.º 24/2014 em Portugal</strong>, o consumidor reconhece expressamente que, por se tratar de bens digitais intangíveis de consumo imediato, **perde o direito ao arrependimento de 14 dias no momento em que inicia o download ou visualiza a chave de ativação**.</p>
+                    </article>
+
+                    <article>
+                        <h3>5.2 Critérios para Devoluções Excecionais</h3>
+                        <p>A Yuzaki Export só concederá reembolsos financeiros diretos nos seguintes casos estritos:</p>
+                        <ul class="styled-list">
+                            <li>Falha técnica comprovada nos ficheiros que causem corrupção do instalador.</li>
+                            <li>Erros de transação do processador de pagamento (cobrança dupla).</li>
+                            <li>Incapacidade técnica de fornecer o ficheiro pago ao cliente após 24 horas da transação bem-sucedida.</li>
+                        </ul>
+                    </article>
+
+                    <article>
+                        <h3>5.3 Arbitragem de Consumo</h3>
+                        <p>Em caso de litígio insolúvel por via direta, o cliente poderá recorrer às entidades oficiais de Resolução Alternativa de Litígios (RAL), como o Centro de Arbitragem de Conflitos de Consumo de Lisboa (CACCL).</p>
+                    </article>
+                </section>
+            </div>
+            
+            <footer class="legal-footer">
+                <div class="footer-grid">
+                    <div>
+                        <strong>Contacto de Suporte Legal:</strong><br>
+                        legalyuzakiexport@gmail.com
+                    </div>
+                    <div>
+                        <strong>Operação & Sede:</strong><br>
+                        Portugal, União Europeia
+                    </div>
+                    <div>
+                        <strong>Foro Judiciário:</strong><br>
+                        Tribunais da Comarca de Lisboa
+                    </div>
+                </div>
+                <p style="margin-top: 40px; color: #718096; font-size: 0.85rem;">© 2026 Yuzaki Export. Todos os direitos reservados. Qualquer cópia ilegal deste documento será processada judicialmente.</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Senha | Yuzaki Export</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='esqueceu_senha.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Recuperar <span>Senha</span></h2>
+        <p>Insere o teu e-mail para receberes o link de redefinição na tua conta <b>Yuzaki</b>.</p>
+
+        <form action="{{ url_for('EsqueciSenha') }}" method="POST">
+            <input type="email" name="email" placeholder="E-mail de utilizador" required>
+            <button type="submit">Enviar Link</button>
+        </form>
+
+        <div class="footer-link">
+            <a href="{{ url_for('Entrar') }}">← Voltar ao início de sessão</a>
+        </div>
+    </div>
+</body>
+</html>

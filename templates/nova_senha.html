@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Senha | Yuzaki Export</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='nova_senha.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Nova <span>Senha</span></h2>
+        <p>Cria uma senha forte para proteger a tua conta <b>Yuzaki</b>.</p>
+
+        <form action="{{ url_for('RedefinirSenha', token=token) }}" method="POST" id="resetForm">
+            <div class="input-group">
+                <input type="password" name="password" id="password" placeholder="Nova Senha" required minlength="6">
+            </div>
+            
+            <div class="input-group">
+                <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirmar Nova Senha" required minlength="6">
+            </div>
+
+            <div id="message" style="color: #ff4b2b; font-size: 0.85rem; margin-bottom: 15px; display: none;">
+                <i class="fas fa-exclamation-circle"></i> As senhas não coincidem!
+            </div>
+
+            <button type="submit" id="submitBtn">Atualizar Senha</button>
+        </form>
+
+        <div class="footer-link">
+            <a href="{{ url_for('Entrar') }}">Cancelar e voltar</a>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('resetForm');
+        const password = document.getElementById('password');
+        const confirm = document.getElementById('confirm_password');
+        const message = document.getElementById('message');
+
+        form.addEventListener('submit', function(e) {
+            if (password.value !== confirm.value) {
+                e.preventDefault();
+                message.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

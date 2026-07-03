@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.O.S. - Falha no Reator | Yuzaki Export</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='erro.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="error-500">
+    <div class="alarm-overlay"></div>
+
+    <div class="stars-container">
+        <div class="stars"></div>
+    </div>
+
+    <div class="error-container">
+        <div class="warning-strip">SISTEMA COMPROMETIDO • EVACUAR ÁREA • ALERTA MÁXIMO</div>
+        
+        <div class="error-wrapper">
+            <div class="error-code">500</div>
+            <div class="astronaut">
+                <i class="fas fa-radiation"></i>
+            </div>
+        </div>
+
+        <h1 class="glitch" data-text="CRISE NO REATOR">CRISE NO <span>REATOR</span></h1>
+        
+        <p class="description">
+            O núcleo de processamento atingiu temperaturas críticas e a ligação à base de dados derreteu.
+            <br><span>Protocolo de contenção ativado.</span>
+        </p>
+        
+        <div class="actions">
+            <a href="{{ url_for('Index') }}" class="btn-home">
+                <i class="fas fa-sync-alt"></i> REINICIAR NÚCLEO
+            </a>
+        </div>
+    </div>
+</body>
+</html>

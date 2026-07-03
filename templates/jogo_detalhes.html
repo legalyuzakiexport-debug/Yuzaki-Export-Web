@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ jogo.titulo }} — Detalhes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='jogo_detalhes.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-logo">
+        <a href="{{ url_for('Index') }}">
+            <div class="logo-img">YE</div>
+            <h1 class="brand-text">Yuzaki <span>Export</span></h1>
+        </a>
+    </div>
+
+    <ul class="nav-links">
+        <li><a href="{{ url_for('Index') }}">Início</a></li>
+        <li><a href="{{ url_for('Loja') }}">Loja</a></li>
+        <li><a href="{{ url_for('Privacidade') }}">Documentação Legal</a></li>
+        <li><a href="{{ url_for('Contacto') }}">Contacto</a></li>
+
+        {% if session.get('user_id') %}
+            <li class="dropdown">
+                <div class="dropbtn">
+                    <i class="fas fa-user-circle"></i> {{ session['user_name'] }} <i class="fas fa-caret-down"></i>
+                </div>
+                <div class="dropdown-content">
+                    <p class="dropdown-label">Minha Conta</p>
+                    <a href="{{ url_for('Biblioteca') }}"><i class="fas fa-book"></i> Biblioteca</a>
+                    <a href="{{ url_for('Perfil') }}"><i class="fas fa-user-cog"></i> Perfil</a>
+                    <a href="{{ url_for('VerCarrinho') }}">
+                        <i class="fas fa-shopping-cart"></i> Carrinho 
+                        {% if session.get('carrinho') %}<span class="cart-count">{{ session['carrinho']|length }}</span>{% endif %}
+                    </a>
+                    <div class="divider"></div>
+                    <a href="{{ url_for('Sair') }}" class="logout-link">Sair</a>
+                </div>
+            </li>
+        {% else %}
+            <li><a href="{{ url_for('Entrar') }}" class="btn-login">Entrar</a></li>
+        {% endif %}
+    </ul>
+</nav>
+
+<main class="game-details-container">
+    <aside class="game-media">
+        <div class="visual-card">
+            <div class="main-icon-display">
+                {{ '💎' if jogo.preco > 0 else '🎮' }}
+            </div>
+            
+            <div class="price-action-card">
+                <div class="price-info">
+                    <span class="price-label">PREÇO ATUAL</span>
+                    
+                    {% set preco_com_desconto = calcular_preco_atual(jogo) %}
+                    
+                    {% if preco_com_desconto < jogo.preco and jogo.preco > 0 %}
+                        <div class="promo-container">
+                            <span class="old-price">{{ "%.2f"|format(jogo.preco) }}€</span>
+                            <span class="discount-badge">-{{ jogo.desconto_percentual }}%</span>
+                        </div>
+                        <span class="price-value sale">{{ "%.2f"|format(preco_com_desconto) }}€</span>
+                        
+                        {% if jogo.promo_fim %}
+                        <small class="promo-timer">
+                            <i class="fas fa-fire"></i> OFERTA ATÉ {{ jogo.promo_fim.strftime('%d/%m') }}
+                        </small>
+                        {% endif %}
+                    {% else %}
+                        <span class="price-value">
+                            {{ "%.2f"|format(jogo.preco) if jogo.preco > 0 else 'GRATUITO' }}€
+                        </span>
+                    {% endif %}
+                </div>
+                
+                {% if jogo.id in meus_downloads %}
+                    <button class="btn-buy-now acquired" disabled>✓ ADQUIRIDO</button>
+                {% else %}
+                    <form action="{{ url_for('AdicionarCarrinho', id_jogo=jogo.id) }}" method="POST">
+                        <button type="submit" class="btn-buy-now">
+                            <i class="fas fa-shopping-cart"></i> 
+                            {{ 'COMPRAR AGORA' if jogo.preco > 0 else 'OBTER GRÁTIS' }}
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="quick-stats">
+            <div class="stat-item">
+                <i class="fas fa-user-shield"></i>
+                <div>
+                    <span>Publicado por</span>
+                    <strong class="author-name">{{ jogo.criador if jogo.criador else 'Staff Yuzaki' }}</strong>
+                </div>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-calendar-alt"></i>
+                <div>
+                    <span>Lançamento</span>
+                    <strong>{{ jogo.data_lancamento.strftime('%d %b, %Y') if jogo.data_lancamento else 'Disponível' }}</strong>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <section class="game-info-content">
+        <header class="game-header-main">
+            <div class="game-tags">
+                <span class="tag-badge {{ 'premium' if jogo.preco > 0 else 'free' }}">
+                    {{ 'EXCLUSIVO PREMIUM' if jogo.preco > 0 else 'PROJETO COMUNITÁRIO' }}
+                </span>
+                <span class="tag-badge verified">VERIFICADO</span>
+            </div>
+            <h1 class="game-title">{{ jogo.titulo }}</h1>
+            <p class="game-subtitle">Licença Digital Vitalícia</p>
+        </header>
+
+        <div class="content-divider"></div>
+
+        <article class="game-description">
+            <h3 class="section-title"><i class="fas fa-file-alt"></i> Descrição do Projeto</h3>
+            <div class="description-text">
+                {{ jogo.descricao | replace('\n', '<br>') | safe }}
+            </div>
+        </article>
+
+        <section class="reviews-section">
+            <h3 class="section-title"><i class="fas fa-comments"></i> Feedbacks</h3>
+            {% if jogo.comentarios %}
+                <div class="reviews-grid">
+                    {% for feedback in jogo.comentarios %}
+                    <div class="review-card">
+                        <div class="review-user">
+                            <i class="fas fa-user-circle"></i>
+                            <strong>{{ feedback.nome_utilizador }}</strong>
+                        </div>
+                        <p class="review-body">"{{ feedback.comentario }}"</p>
+                        <span class="review-date">
+                            {{ feedback.data_avaliacao.strftime('%d/%m/%Y') if feedback.data_avaliacao else '' }}
+                        </span>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-reviews">
+                    <p>Ainda sem avaliações.</p>
+                </div>
+            {% endif %}
+        </section>
+    </section>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yuzaki Export — Social</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='social.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        </nav>
+
+    <main class="container-main social-grid">
+        <aside class="social-sidebar">
+            <div class="sidebar-section">
+        <a href="{{ url_for('Index') }}" class="btn-back-home">
+            <i class="fas fa-home"></i> Voltar ao Início
+        </a>
+    </div>
+            <div class="sidebar-section">
+                <h3><i class="fas fa-search"></i> Procurar Jogadores</h3>
+                <form action="{{ url_for('ProcurarAmigos') }}" method="GET" class="search-box-social">
+                    <input type="text" name="query" placeholder="Nick do utilizador..." required>
+                    <button type="submit"><i class="fas fa-arrow-right"></i></button>
+                </form>
+            </div>
+
+            <div class="sidebar-section pending-requests">
+                <h4><i class="fas fa-clock"></i> Pedidos Pendentes</h4>
+                <div class="requests-list">
+                    {% for p in pendentes %}
+                    <div class="user-mini-card">
+                        <div class="mini-avatar">{{ p.nome_utilizador[0]|upper }}</div>
+                        <div class="mini-info">
+                            <span class="nick">{{ p.nome_utilizador }}</span>
+                            <div class="actions">
+                                <a href="{{ url_for('GerirAmizade', id=p.id_amizade, acao='aceitar') }}" class="btn-mini accept" title="Aceitar">
+                                    <i class="fas fa-check"></i>
+                                </a>
+                                <a href="{{ url_for('GerirAmizade', id=p.id_amizade, acao='recusar') }}" class="btn-mini reject" title="Recusar">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p class="empty-msg">Nenhum pedido novo.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </aside>
+
+        <section class="friends-list">
+            <header class="section-header">
+                <h2><i class="fas fa-users"></i> Os meus Amigos <span>({{ amigos|length }})</span></h2>
+            </header>
+
+            <div class="friends-grid">
+                {% for a in amigos %}
+                <div class="friend-card">
+                    <div class="friend-avatar-wrapper">
+                        <div class="friend-avatar">{{ a.nome_utilizador[0]|upper }}</div>
+                        <span class="status-dot online"></span>
+                    </div>
+                    
+                    <div class="friend-info">
+                        <h4>{{ a.nome_utilizador }}</h4>
+                        <p class="member-since">Membro desde: {{ a.data_registo.strftime('%m/%Y') }}</p>
+                        <span class="status-text">Online</span>
+                    </div>
+
+                    <div class="friend-actions">
+                        <a href="{{ url_for('ChatAmigo', amigo_id=a.id) }}" class="btn-message" title="Chat">
+    <i class="fas fa-comment"></i>
+</a>
+                    </div>
+                </div>
+                {% else %}
+                <div class="empty-state-social">
+                    <i class="fas fa-user-friends"></i>
+                    <p>A tua lista de amigos está vazia.</p>
+                    <small>Usa a barra de pesquisa para encontrar outros jogadores!</small>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>

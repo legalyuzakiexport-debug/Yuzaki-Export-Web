@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yuzaki Chat — {{ amigo.nome_utilizador }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="chat-page">
+
+    <div class="chat-wrapper">
+        <header class="chat-header">
+            <div class="user-info">
+                <a href="{{ url_for('Social') }}" class="back-link"><i class="fas fa-chevron-left"></i></a>
+                <div class="avatar-status">
+                    <div class="chat-avatar">{{ amigo.nome_utilizador[0]|upper }}</div>
+                    <span class="dot-online"></span>
+                </div>
+                <div class="chat-user-details">
+                    <h3>{{ amigo.nome_utilizador }}</h3>
+                    <span>Ativo agora</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button title="Chamada (Em breve)"><i class="fas fa-phone"></i></button>
+                <button title="Mais opções"><i class="fas fa-ellipsis-v"></i></button>
+            </div>
+        </header>
+
+        <div class="messages-container" id="chatWindow">
+            {% for m in historico %}
+                <div class="message-group {% if m.id_remetente == session['user_id'] %}sent{% else %}received{% endif %}">
+                    <div class="message-bubble">
+                        {{ m.mensagem }}
+                        <span class="message-time">{{ m.data_envio.strftime('%H:%M') }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <footer class="chat-footer">
+            <form action="{{ url_for('EnviarMensagem') }}" method="POST" class="message-form">
+                <input type="hidden" name="amigo_id" value="{{ amigo.id }}">
+                <button type="button" class="btn-attach"><i class="fas fa-plus"></i></button>
+                <input type="text" name="mensagem" placeholder="Escreve para {{ amigo.nome_utilizador }}..." required autocomplete="off" autofocus>
+                <button type="submit" class="btn-send"><i class="fas fa-paper-plane"></i></button>
+            </form>
+        </footer>
+    </div>
+
+    <script>
+        // Scroll automático para a última mensagem
+        const chatWindow = document.getElementById('chatWindow');
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        // Atualização automática opcional (Refresh a cada 10 seg para testes)
+        // setTimeout(() => { location.reload(); }, 10000);
+    </script>
+</body>
+</html>

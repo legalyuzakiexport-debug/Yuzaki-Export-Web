@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <title>YE — Moderação de Utilizador</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin_decisao.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="overlay">
+        <div class="decision-card">
+            <div class="card-header">
+                <i class="fas fa-user-shield"></i>
+                <h2>Gestão de Utilizador</h2>
+                <p>A aplicar ação a: <strong>{{ u.nome_utilizador }}</strong></p>
+            </div>
+
+            <form action="{{ url_for('AdminConfirmarAcaoUser', id=u.id) }}" method="POST">
+                <input type="hidden" name="email_user" value="{{ u.email }}">
+                <input type="hidden" name="nome_user" value="{{ u.nome_utilizador }}">
+
+                <div class="campo">
+                    <label>Tipo de Sanção:</label>
+                    <select name="motivo" id="seletor-acao" required onchange="atualizarBotao()">
+                        <optgroup label="Ações Críticas">
+                            <option value="banido" data-tipo="delete">Banir (Apagar Tudo)</option>
+                        </optgroup>
+                        <optgroup label="Ações de Moderação">
+                            <option value="suspenso" data-tipo="update">Suspender Conta</option>
+                            <option value="aviso" data-tipo="update">Enviar Aviso Formal</option>
+                            <option value="verificação" data-tipo="update">Forçar Verificação de Identidade</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label>Mensagem para o Utilizador:</label>
+                    <textarea name="detalhes" rows="5" required placeholder="Explica o motivo desta sanção..."></textarea>
+                </div>
+
+                <div class="acoes">
+                    <a href="{{ url_for('Admin') }}" class="btn-voltar">Cancelar</a>
+                    <button type="submit" id="btn-submeter" class="btn-perigo">Confirmar Ação</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    function atualizarBotao() {
+        const seletor = document.getElementById('seletor-acao');
+        const botao = document.getElementById('btn-submeter');
+        const tipo = seletor.options[seletor.selectedIndex].getAttribute('data-tipo');
+
+        if (tipo === 'delete') {
+            botao.innerText = "BANIR PERMANENTEMENTE";
+            botao.style.background = "#ff4b2b";
+        } else {
+            botao.innerText = "APLICAR SANÇÃO";
+            botao.style.background = "#ffa600";
+        }
+    }
+    window.onload = atualizarBotao;
+    </script>
+</body>
+</html>

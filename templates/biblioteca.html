@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yuzaki Export — Minha Biblioteca</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='biblioteca.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div id="toast-container">
+      {% for category, message in messages %}
+        <div class="toast-card {{ category }}">
+          <span class="toast-icon">{% if category == 'error' %}❌{% else %}✨{% endif %}</span>
+          <span class="toast-message">{{ message }}</span>
+        </div>
+      {% endfor %}
+    </div>
+
+    <script>
+      setTimeout(() => {
+        const container = document.getElementById('toast-container');
+        if(container) {
+          container.style.transition = '0.5s ease';
+          container.style.opacity = '0';
+          setTimeout(() => container.remove(), 500);
+        }
+      }, 4000);
+    </script>
+  {% endif %}
+{% endwith %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+
+<nav class="navbar">
+    <div class="nav-logo">
+        <a href="{{ url_for('Index') }}">
+            <div class="logo-img">YE</div>
+            <h1 class="brand-text">Yuzaki <span>Export</span></h1>
+        </a>
+    </div>
+
+    <ul class="nav-links">
+        <li><a href="{{ url_for('Index') }}">Início</a></li>
+        <li><a href="{{ url_for('Loja') }}">Loja</a></li>
+        <li><a href="{{ url_for('Privacidade') }}">Documentação Legal</a></li>
+        <li><a href="{{ url_for('Contacto') }}">Contacto</a></li>
+
+        {% if session.get('user_id') %}
+            <li class="dropdown">
+    <div class="dropbtn">
+        <i class="fas fa-user-circle"></i> {{ session['user_name'] }} 
+        {% if notificacoes_count > 0 %}
+            <span class="notification-badge">{{ notificacoes_count }}</span>
+        {% endif %}
+        <i class="fas fa-caret-down"></i>
+    </div>
+    <div class="dropdown-content">
+        <p class="dropdown-label">Minha Conta</p>
+        
+        <a href="{{ url_for('VerNotificacoes') }}" class="notification-link">
+            <i class="fas fa-bell"></i> Notificações
+            {% if notificacoes_count > 0 %}
+                <span class="count">{{ notificacoes_count }}</span>
+            {% endif %}
+        </a>
+        
+        <a href="{{ url_for('Social') }}" class="nav-social-link">
+    <i class="fas fa-users"></i> SOCIAL
+    {% if total_pedidos_pendentes > 0 %}
+        <span class="badge-social">{{ total_pedidos_pendentes }}</span>
+    {% endif %}
+</a>
+
+        <div class="divider"></div>
+        <a href="{{ url_for('Biblioteca') }}"><i class="fas fa-book"></i> Biblioteca</a>
+        <a href="{{ url_for('Perfil') }}"><i class="fas fa-user-cog"></i> Perfil</a>
+        <a href="{{ url_for('VerCarrinho') }}">
+            <i class="fas fa-shopping-cart"></i> Carrinho 
+        </a>
+
+        {% if session.get('user_email') == ADMIN_EMAIL %}
+            <div class="divider"></div>
+            <a href="{{ url_for('Admin') }}" style="color: #ff4b2b;">Painel de Gestão</a>
+        {% endif %}
+
+        <div class="divider"></div>
+        <a href="{{ url_for('Sair') }}" class="logout-link">Sair</a>
+    </div>
+</li>
+        {% else %}
+            <li><a href="{{ url_for('Entrar') }}" class="btn-login">Entrar</a></li>
+        {% endif %}
+    </ul>
+</nav>
+
+<main class="container-main">
+    <header class="library-header" style="margin-bottom: 20px; text-align: center;">
+        <h2 class="brand-text" style="font-size: 2.5rem;">Minha <span>Biblioteca</span></h2>
+        <p style="color: var(--text-muted);">Estes são os teus tesouros digitais.</p>
+    </header>
+    
+<div class="search-bar-container">
+    <form action="" method="GET">
+        <div class="input-wrapper">
+            <i class="fas fa-search"></i>
+            <input type="text" name="search" placeholder="Procurar na minha coleção..." value="{{ busca if busca else '' }}">
+        </div>
+        <button type="submit" class="btn-search">Pesquisar</button>
+        {% if busca %}
+            <a href="{{ url_for('Biblioteca') }}" class="btn-clear"><i class="fas fa-times"></i></a>
+        {% endif %}
+    </form>
+</div>
+
+    <div class="games-grid">
+        {% for jogo in jogos %}
+        <article class="game-card">
+            <div style="position: relative;">
+                <a href="{{ url_for('RemoverDaBiblioteca', id_jogo=jogo.id) }}" 
+                   class="btn-remove-small" 
+                   onclick="return confirm('Queres mesmo remover este jogo da tua biblioteca?')">REMOVER</a>
+                
+                <div class="game-thumb">🎮</div>
+            </div>
+            
+            <div class="game-info">
+                <h3>{{ jogo.titulo }}</h3>
+                <div class="category-badge-container" style="margin-top: -5px; margin-bottom: 10px;">
+    {% if jogo.categoria_nome %}
+        {% for cat in jogo.categoria_nome.split(', ') %}
+            <span class="badge-cat" style="background: rgba(102, 192, 244, 0.1); color: #66c0f4; border: 1px solid rgba(102, 192, 244, 0.3); padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; margin-right: 5px;">
+                <i class="fas fa-tag" style="font-size: 0.5rem;"></i> {{ cat }}
+            </span>
+        {% endfor %}
+    {% else %}
+        <span class="badge-cat" style="background: rgba(255, 255, 255, 0.05); color: #888; border: 1px solid rgba(255, 255, 255, 0.1); padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase;">
+            Geral
+        </span>
+    {% endif %}
+</div>
+                <p class="game-description">
+                    {{ jogo.descricao[:100] }}{% if jogo.descricao|length > 100 %}...{% endif %}
+                </p>
+                
+                <div class="install-zone">
+                    <a href="{{ url_for('static', filename='uploads/games/' + jogo.imagem_url) }}" 
+                       class="btn-install-game" download="{{ jogo.titulo }}">
+                       <i class="fas fa-download"></i> INSTALAR JOGO
+                    </a>
+                </div>
+
+                <div class="review-section">
+    {% if jogo.minha_avaliacao %}
+        <div class="avaliacao-concluida">
+            <h4 class="review-title" style="color: #4cd137;">✓ A tua Opinião</h4>
+            <div class="stars-display">
+                {% for i in range(jogo.minha_avaliacao.classificacao) %}★{% endfor %}
+            </div>
+            <p class="user-comment">{{ jogo.minha_avaliacao.comentario }}</p>
+        </div>
+    {% else %}
+        <h4 class="review-title">Avaliar Experiência</h4>
+        <form action="{{ url_for('Avaliar', id_jogo=jogo.id) }}" method="POST" class="review-form">
+            <select name="classificacao" required>
+                <option value="" disabled selected>Quantas estrelas?</option>
+                <option value="5">5 ★ Excelente</option>
+                <option value="4">4 ★ Muito Bom</option>
+                <option value="3">3 ★ Bom</option>
+                <option value="2">2 ★ Regular</option>
+                <option value="1">1 ★ Fraco</option>
+            </select>
+
+            <textarea name="comentario" rows="2" placeholder="O que achaste deste projeto?" required></textarea>
+            
+            <button type="submit" class="btn-send-review">
+                Enviar Feedback
+            </button>
+        </form>
+    {% endif %}
+</div>
+
+                <div class="meta-tags">
+                    <span class="tag-status">ADQUIRIDO</span>
+                    <span class="tag-version">Versão Digital</span>
+                </div>
+            </div>
+        </article>
+        {% else %}
+        <div class="empty-library" style="grid-column: 1/-1; text-align: center; padding: 60px; background: var(--bg-card); border-radius: 15px; border: 1px dashed var(--border);">
+            {% if busca %}
+                <p style="color: var(--text-muted); font-size: 1.2rem; margin-bottom: 20px;">Nenhum jogo encontrado com o nome "{{ busca }}".</p>
+                <a href="{{ url_for('Biblioteca') }}" class="user-name-btn" style="text-decoration: none; padding: 10px 20px;">
+                    Ver todos os meus jogos
+                </a>
+            {% else %}
+                <p style="color: var(--text-muted); font-size: 1.2rem; margin-bottom: 20px;">A tua biblioteca ainda está vazia.</p>
+                <a href="{{ url_for('Loja') }}" class="user-name-btn" style="text-decoration: none; padding: 10px 20px;">
+                    Explorar jogos na comunidade
+                </a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</main>
+
+</body>
+</html>

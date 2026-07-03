@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <title>YE — Decisão Administrativa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin_decisao.css') }}">
+</head>
+<body>
+    <div class="card-decisao">
+        <h2>⚠️ Decisão para: {{ jogo.titulo }}</h2>
+        <p>Estás prestes a remover este jogo. Seleciona o motivo para notificar o autor.</p>
+
+<form action="{{ url_for('AdminConfirmarAcao', id=jogo.id) }}" method="POST">
+    <input type="hidden" name="email_dono" value="{{ jogo.email_dono }}">
+    <input type="hidden" name="titulo_jogo" value="{{ jogo.titulo }}">
+
+    <div class="campo">
+        <label>Ação Administrativa:</label>
+        <select name="motivo" id="seletor-acao" required onchange="atualizarBotao()">
+            <optgroup label="Ações Finais (Apagam o Jogo)">
+                <option value="eliminado" data-tipo="delete">Eliminar (Violação de Termos)</option>
+                <option value="banido" data-tipo="delete">Banir Permanentemente</option>
+            </optgroup>
+            <optgroup label="Ações de Moderação (Mantêm o Jogo)">
+                <option value="suspenso" data-tipo="update">Suspenso Temporariamente</option>
+                <option value="em verificação" data-tipo="update">Em Verificação (Copyright)</option>
+                <option value="em vigilancia" data-tipo="update">Em Vigilância (Atividade Suspeita)</option>
+            </optgroup>
+        </select>
+    </div>
+
+    <div class="campo">
+        <label>Observações / Motivo do E-mail:</label>
+        <textarea name="detalhes" 
+                  rows="6" 
+                  required 
+                  placeholder="Escreve aqui a explicação que o desenvolvedor vai receber por e-mail..."></textarea>
+    </div>
+
+    <div class="acoes">
+        <a href="{{ url_for('Admin') }}" class="btn-voltar">Cancelar</a>
+        <button type="submit" id="btn-submeter" class="btn-perigo">Confirmar e Notificar</button>
+    </div>
+</form>
+    </div>
+</body>
+</html>

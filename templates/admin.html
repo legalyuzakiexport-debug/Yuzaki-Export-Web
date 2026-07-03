@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yuzaki Export — Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+</head>
+<body>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+
+<nav class="navbar">
+    <div class="nav-logo">
+        <a href="{{ url_for('Index') }}">
+            <div class="logo-img">YE</div>
+            <h1 class="brand-text">Yuzaki <span>Export</span></h1>
+        </a>
+    </div>
+
+    <ul class="nav-links">
+        <li><a href="{{ url_for('Index') }}">Início</a></li>
+        <li><a href="{{ url_for('Loja') }}">Loja</a></li>
+        <li><a href="{{ url_for('Privacidade') }}">Decomentação Legal</a></li>
+        <li><a href="{{ url_for('Contacto') }}">Contacto</a></li>
+
+        {% if session.get('user_id') %}
+            <li class="dropdown">
+                <div class="dropbtn">
+                    <i class="fas fa-user-circle"></i> {{ session['user_name'] }} <i class="fas fa-caret-down"></i>
+                </div>
+                <div class="dropdown-content">
+                    <p class="dropdown-label">Minha Conta</p>
+                    <a href="{{ url_for('Biblioteca') }}"><i class="fas fa-book"></i> Biblioteca</a>
+                    <a href="{{ url_for('Perfil') }}"><i class="fas fa-user-cog"></i> Perfil</a>
+                    <a href="{{ url_for('VerCarrinho') }}">
+                        <i class="fas fa-shopping-cart"></i> Carrinho 
+                        {% if session.get('carrinho') %}<span class="cart-count">{{ session['carrinho']|length }}</span>{% endif %}
+                    </a>
+
+                    {% if session.get('user_email') == ADMIN_EMAIL %}
+                        <div class="divider"></div>
+                        <p class="dropdown-label" style="color: #ff4b2b;">Admin</p>
+                        <a href="{{ url_for('Admin') }}" style="color: #ff4b2b;">Painel de Gestão</a>
+                    {% endif %}
+
+                    <div class="divider"></div>
+                    <a href="{{ url_for('Sair') }}" class="logout-link">Sair</a>
+                </div>
+            </li>
+        {% else %}
+            <li><a href="{{ url_for('Entrar') }}" class="btn-login">Entrar</a></li>
+        {% endif %}
+    </ul>
+</nav>
+
+<main class="container-main">
+    <header class="admin-header">
+        <h2 class="brand-text" style="font-size: 2.5rem;">Gestão geral da <span>Yuzaki Export</span></h2>
+        <p style="color: var(--text-muted);">Tens controlo total sobre os jogos e utilizadores da plataforma.</p>
+    </header>
+
+    <section class="card admin-section">
+        <div class="section-header">
+            <h3>🎮 Todos os Jogos Publicados</h3>
+            <span class="count-badge">{{ jogos|length }} Jogos</span>
+        </div>
+        
+        <div class="table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Preço</th>
+                        <th>Autor (ID)</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+    {% for jogo in jogos %}
+    <tr>
+        <td>#{{ jogo.id }}</td>
+        <td><span class="game-name">{{ jogo.titulo }}</span></td>
+        <td>{{ "%.2f"|format(jogo.preco) }}€</td>
+        
+        <td>
+            <span class="tag-author">
+                <i class="fas fa-user"></i> {{ jogo.nome_utilizador }}
+            </span>
+        </td>
+
+        <td>
+            <a href="{{ url_for('AdminApagarJogo', id=jogo.id) }}" 
+               class="btn-action delete">
+               <i class="fas fa-trash"></i> Eliminar
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="card admin-section" style="margin-top: 40px;">
+        <div class="section-header">
+            <h3>👥 Utilizadores Registados</h3>
+            <span class="count-badge" style="background: rgba(255, 166, 0, 0.1); color: #ffa600;">
+                {{ users|length }} Utilizadores
+            </span>
+        </div>
+        
+        <div class="table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Registo</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                    <tr>
+                        <td>#{{ u.id }}</td>
+                        <td><span class="game-name">{{ u.nome_utilizador }}</span></td>
+                        <td>{{ u.email }}</td>
+                        <td>{{ u.data_registo }}</td>
+                        <td>
+                            {% if u.email != session.get('user_email') %}
+                            <a href="{{ url_for('AdminDecisaoUser', id=u.id) }}" 
+   class="btn-action delete" 
+   style="border-color: #ff4b2b; color: #ff4b2b;">
+   GERIR CONTA
+</a>
+                            {% else %}
+                            <span class="tag-author" style="background: rgba(255,255,255,0.1); color: #888;">Tu (Admin)</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
+
+</body>
+</html>

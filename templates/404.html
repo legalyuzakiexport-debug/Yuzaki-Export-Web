@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Rota Perdida | Yuzaki Export</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='erro.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="stars-container">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+        <div class="stars3"></div>
+    </div>
+
+    <div class="error-container">
+        <div class="error-wrapper">
+            <div class="error-code">404</div>
+            <div class="astronaut" id="astronaut" onclick="activateHyperdrive()">
+                <i class="fas fa-user-astronaut"></i>
+                <div class="glow"></div>
+            </div>
+        </div>
+
+        <h1 id="error-title">Conexão <span>Perdida</span></h1>
+        <p id="error-text">Parece que a página que procuras foi movida para outra galáxia ou nunca existiu nesta rota comercial.</p>
+        
+        <div class="actions">
+            <a href="{{ url_for('Index') }}" class="btn-home">
+                <i class="fas fa-rocket"></i> Voltar à Base
+            </a>
+        </div>
+    </div>
+
+    <script>
+        let clicks = 0;
+        const astronaut = document.getElementById('astronaut');
+        const title = document.getElementById('error-title');
+        const text = document.getElementById('error-text');
+
+        function activateHyperdrive() {
+            clicks++;
+            if (clicks === 5) {
+                document.body.classList.add('hyperdrive-active');
+                title.innerHTML = "MODO <span>HYPERDRIVE</span>";
+                text.innerText = "A entrar em velocidade luz para te levar de volta...";
+                
+                setTimeout(() => {
+                    window.location.href = "{{ url_for('Index') }}";
+                }, 2500);
+            }
+        }
+    </script>
+</body>
+</html>

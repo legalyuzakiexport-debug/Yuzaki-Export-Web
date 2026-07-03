@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YE — Segurança da Conta</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='verificar_2fa.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<main class="auth-container-2fa">
+    <div class="auth-card-2fa">
+        <div class="icon-wrapper">
+            <i class="fas fa-shield-check"></i>
+        </div>
+        
+        <h2 class="brand-text">Código de <span>Acesso</span></h2>
+        
+        <p>
+            Introduz o código que enviámos para o teu e-mail registado na <strong>Yuzaki Export</strong>.
+        </p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}" style="color: #ff4b2b; background: rgba(255, 75, 43, 0.1); padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('Verificar2FA') }}" method="POST">
+            <input type="text" 
+                   name="codigo" 
+                   maxlength="6" 
+                   inputmode="numeric" 
+                   pattern="[0-9]*" 
+                   class="code-input-2fa" 
+                   placeholder="······" 
+                   autocomplete="one-time-code" 
+                   required 
+                   autofocus>
+            
+            <button type="submit" class="btn-auth-2fa">
+                VERIFICAR AGORA
+            </button>
+        </form>
+
+        <a href="{{ url_for('Entrar') }}" class="back-link-2fa">
+            <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Voltar ao Login
+        </a>
+    </div>
+</main>
+
+</body>
+</html>

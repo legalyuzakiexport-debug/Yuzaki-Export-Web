@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yuzaki Export — Contacte-nos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='loja.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='contacto.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+
+<nav class="navbar">
+    <div class="nav-logo">
+        <a href="{{ url_for('Index') }}">
+            <div class="logo-img">YE</div>
+            <h1 class="brand-text">Yuzaki <span>Export</span></h1>
+        </a>
+    </div>
+
+    <ul class="nav-links">
+        <li><a href="{{ url_for('Index') }}">Início</a></li>
+        <li><a href="{{ url_for('Loja') }}">Loja</a></li>
+        <li><a href="{{ url_for('Privacidade') }}">Decomentação Legal</a></li>
+        <li><a href="{{ url_for('Contacto') }}">Contacto</a></li>
+
+        {% if session.get('user_id') %}
+            <li class="dropdown">
+    <div class="dropbtn">
+        <i class="fas fa-user-circle"></i> {{ session['user_name'] }} 
+        {% if notificacoes_count > 0 %}
+            <span class="notification-badge">{{ notificacoes_count }}</span>
+        {% endif %}
+        <i class="fas fa-caret-down"></i>
+    </div>
+    <div class="dropdown-content">
+        <p class="dropdown-label">Minha Conta</p>
+        
+        <a href="{{ url_for('VerNotificacoes') }}" class="notification-link">
+            <i class="fas fa-bell"></i> Notificações
+            {% if notificacoes_count > 0 %}
+                <span class="count">{{ notificacoes_count }}</span>
+            {% endif %}
+        </a>
+        
+        <a href="{{ url_for('Social') }}" class="nav-social-link">
+    <i class="fas fa-users"></i> SOCIAL
+    {% if total_pedidos_pendentes > 0 %}
+        <span class="badge-social">{{ total_pedidos_pendentes }}</span>
+    {% endif %}
+</a>
+
+        <div class="divider"></div>
+        <a href="{{ url_for('Biblioteca') }}"><i class="fas fa-book"></i> Biblioteca</a>
+        <a href="{{ url_for('Perfil') }}"><i class="fas fa-user-cog"></i> Perfil</a>
+        <a href="{{ url_for('VerCarrinho') }}">
+            <i class="fas fa-shopping-cart"></i> Carrinho 
+        </a>
+
+        {% if session.get('user_email') == ADMIN_EMAIL %}
+            <div class="divider"></div>
+            <a href="{{ url_for('Admin') }}" style="color: #ff4b2b;">Painel de Gestão</a>
+        {% endif %}
+
+        <div class="divider"></div>
+        <a href="{{ url_for('Sair') }}" class="logout-link">Sair</a>
+    </div>
+</li>
+        {% else %}
+            <li><a href="{{ url_for('Entrar') }}" class="btn-login">Entrar</a></li>
+        {% endif %}
+    </ul>
+</nav>
+<main class="container-main" style="max-width: 800px; margin: 50px auto;">
+    <header style="text-align: center; margin-bottom: 40px;">
+        <h2 class="brand-text" style="font-size: 2.5rem;">Falar com a <span>Equipa</span></h2>
+        <p style="color: var(--text-muted);">Dúvidas, feedback ou problemas técnicos? Estamos aqui para ajudar.</p>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}" style="padding: 15px; margin-bottom: 20px; border-radius: 5px; background: rgba(0,0,0,0.3); color: white; border: 1px solid var(--primary);">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="contact-card">
+        <form action="{{ url_for('Contacto') }}" method="POST">
+            <div class="form-group">
+                <label class="form-label">ASSUNTO</label>
+                <select name="assunto" class="form-select" required>
+                    <option value="Feedback Geral">Feedback Geral</option>
+                    <option value="Problema com Jogo">Problema com Jogo / Download</option>
+                    <option value="Sugestão de Conteúdo">Sugestão de Conteúdo</option>
+                    <option value="Outro">Outro</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">MENSAGEM</label>
+                <textarea name="mensagem" class="form-textarea" placeholder="Escreve aqui a tua mensagem detalhada..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                Enviar Mensagem <i class="fas fa-paper-plane" style="margin-left: 10px;"></i>
+            </button>
+        </form>
+    </div>
+
+    <div class="support-info">
+        <div class="info-item">
+            <i class="fas fa-envelope"></i>
+            <p>E-MAIL DIRETO<span>yuzakisama2007@gmail.com</span></p>
+        </div>
+        <div class="info-item">
+            <i class="fas fa-clock"></i>
+            <p>RESPOSTA MÉDIA<span>24-48 Horas</span></p>
+        </div>
+        <div class="info-item">
+            <i class="fas fa-shield-alt"></i>
+            <p>SISTEMA SEGURO<span>Dados Encriptados</span></p>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

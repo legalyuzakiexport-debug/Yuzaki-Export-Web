@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yuzaki Export — O Teu Carrinho</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='loja.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(77, 171, 247, 0.3);
+            background: #61b5f8 !important;
+        }
+        .cart-row:hover {
+            background: rgba(255,255,255,0.05) !important;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-logo">
+        <a href="{{ url_for('Index') }}">
+            <div class="logo-img">YE</div>
+            <h1 class="brand-text">Yuzaki <span>Export</span></h1>
+        </a>
+    </div>
+
+    <ul class="nav-links">
+        <li><a href="{{ url_for('Index') }}">Início</a></li>
+        <li><a href="{{ url_for('Loja') }}">Loja</a></li>
+        <li><a href="{{ url_for('Privacidade') }}">Documentação Legal</a></li>
+        <li><a href="{{ url_for('Contacto') }}">Contacto</a></li>
+
+        {% if session.get('user_id') %}
+            <li class="dropdown">
+    <div class="dropbtn">
+        <i class="fas fa-user-circle"></i> {{ session['user_name'] }} 
+        {% if notificacoes_count > 0 %}
+            <span class="notification-badge">{{ notificacoes_count }}</span>
+        {% endif %}
+        <i class="fas fa-caret-down"></i>
+    </div>
+    <div class="dropdown-content">
+        <p class="dropdown-label">Minha Conta</p>
+        
+        <a href="{{ url_for('VerNotificacoes') }}" class="notification-link">
+            <i class="fas fa-bell"></i> Notificações
+            {% if notificacoes_count > 0 %}
+                <span class="count">{{ notificacoes_count }}</span>
+            {% endif %}
+        </a>
+        
+        <a href="{{ url_for('Social') }}" class="nav-social-link">
+    <i class="fas fa-users"></i> SOCIAL
+    {% if total_pedidos_pendentes > 0 %}
+        <span class="badge-social">{{ total_pedidos_pendentes }}</span>
+    {% endif %}
+</a>
+
+        <div class="divider"></div>
+        <a href="{{ url_for('Biblioteca') }}"><i class="fas fa-book"></i> Biblioteca</a>
+        <a href="{{ url_for('Perfil') }}"><i class="fas fa-user-cog"></i> Perfil</a>
+        <a href="{{ url_for('VerCarrinho') }}">
+            <i class="fas fa-shopping-cart"></i> Carrinho 
+        </a>
+
+        {% if session.get('user_email') == ADMIN_EMAIL %}
+            <div class="divider"></div>
+            <a href="{{ url_for('Admin') }}" style="color: #ff4b2b;">Painel de Gestão</a>
+        {% endif %}
+
+        <div class="divider"></div>
+        <a href="{{ url_for('Sair') }}" class="logout-link">Sair</a>
+    </div>
+</li>
+        {% else %}
+            <li><a href="{{ url_for('Entrar') }}" class="btn-login">Entrar</a></li>
+        {% endif %}
+    </ul>
+</nav>
+
+<main class="container-main">
+    <header class="library-header" style="margin-bottom: 50px; text-align: left;">
+        <h2 class="brand-text" style="font-size: 2.8rem;">O Teu <span>CARRINHO</span></h2>
+        <p style="color: var(--text-muted); font-size: 1.1rem;">
+            Review da licença digital com taxas aplicáveis de 23% (PT).
+        </p>
+    </header>
+
+    {% if jogos %}
+        <div class="cart-container" style="background: var(--bg-card); border-radius: 20px; padding: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.4);">
+            
+            <table class="cart-table" style="width: 100%; border-collapse: separate; border-spacing: 0 15px;">
+                <thead>
+                    <tr style="color: var(--text-muted); text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">
+                        <th style="text-align: left; padding: 10px 20px;">Artigo</th>
+                        <th style="text-align: right; padding: 10px 20px;">Base (Líquido)</th>
+                        <th style="text-align: right; padding: 10px 20px;">IVA (23%)</th>
+                        <th style="text-align: right; padding: 10px 20px;">Total</th>
+                        <th style="text-align: center; padding: 10px 20px;">Remover</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for jogo in jogos %}
+                    <tr class="cart-row" style="background: rgba(255,255,255,0.03); transition: 0.3s;">
+                        <td style="padding: 25px 20px; border-radius: 12px 0 0 12px;">
+                            <div style="font-weight: 800; font-size: 1.5rem; color: #fff; letter-spacing: 0.5px;">
+                                {{ jogo.titulo }}
+                                {% if jogo.desconto_percentual > 0 %}
+                                    <span style="background: #eb4d4b; color: #fff; font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; vertical-align: middle; margin-left: 10px;">
+                                        -{{ jogo.desconto_percentual }}%
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </td>
+
+                        <td style="text-align: right; padding: 25px 20px; color: #8b949e; font-size: 1.1rem;">
+                            {{ "%.2f"|format(jogo.base_unitario) }}€
+                        </td>
+
+                        <td style="text-align: right; padding: 25px 20px; color: #8b949e; font-size: 1.1rem;">
+                            {{ "%.2f"|format(jogo.iva_unitario) }}€
+                        </td>
+
+                        <td style="text-align: right; padding: 25px 20px; font-size: 1.2rem; font-weight: 700; color: #fff;">
+                            {{ "%.2f"|format(jogo.total_unitario) }}€
+                        </td>
+
+                        <td style="text-align: center; padding: 25px 20px; border-radius: 0 12px 12px 0;">
+                            <a href="{{ url_for('RemoverDoCarrinho', id_jogo=jogo.id) }}" style="color: #ff4757; font-size: 1.1rem; background: rgba(255, 71, 87, 0.1); padding: 10px; border-radius: 8px;">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="cart-footer" style="margin-top: 60px; padding-top: 40px; border-top: 2px solid rgba(255,255,255,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px;">
+                    
+                    <a href="{{ url_for('Loja') }}" style="color: #8b949e; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                        <i class="fas fa-arrow-left"></i> Voltar à Loja
+                    </a>
+                    
+                    <div style="text-align: right;">
+                        <div style="margin-bottom: 8px; opacity: 0.6;">
+                            <span style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Total Base (S/ IVA):</span>
+                            <span style="color: #fff; font-size: 1rem; font-weight: 500; margin-left: 10px;">{{ "%.2f"|format(total_base) }}€</span>
+                        </div>
+
+                        <div style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                            <span style="color: var(--text-muted); font-size: 1rem;">Imposto IVA Acumulado (23%):</span>
+                            <span style="color: #ffffff; font-size: 1.4rem; font-weight: 600; margin-left: 10px;">{{ "%.2f"|format(total_iva) }}€</span>
+                        </div>
+
+                        <div>
+                            <span style="color: var(--text-muted); font-size: 1.2rem; display: block; margin-bottom: 5px; font-weight: 600;">
+                                VALOR FINAL A PAGAR:
+                            </span>
+                            <span style="color: #4dabf7; font-size: 4.8rem; font-weight: 900; text-shadow: 0 0 35px rgba(77, 171, 247, 0.4); line-height: 1;">
+                                {{ "%.2f"|format(total) }}€
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <form action="{{ url_for('FinalizarCompra') }}" method="POST">
+                    <button type="submit" class="btn-confirm" style="background: #4dabf7; color: #0b0e14; padding: 22px; font-size: 1.4rem; font-weight: 900; border-radius: 12px; width: 100%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 15px; transition: 0.3s;">
+                        FINALIZAR AQUISIÇÃO <i class="fas fa-lock"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 100px; background: var(--bg-card); border: 2px dashed rgba(255,255,255,0.1); border-radius: 20px;">
+            <i class="fas fa-shopping-basket" style="font-size: 5rem; color: rgba(255,255,255,0.1); margin-bottom: 30px;"></i>
+            <h3 style="font-size: 1.8rem; color: #fff;">O teu carrinho está vazio</h3>
+            <a href="{{ url_for('Loja') }}" class="btn-buy" style="display: inline-block; margin-top: 30px; padding: 15px 40px; text-decoration: none; background: #4dabf7; color: #000; border-radius: 8px; font-weight: bold;">Explorar Projetos</a>
+        </div>
+    {% endif %}
+</main>
+
+</body>
+</html>

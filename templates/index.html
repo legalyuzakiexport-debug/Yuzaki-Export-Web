@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yuzaki Export — Início</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-logo">
+        <a href="{{ url_for('Index') }}">
+            <div class="logo-img">YE</div>
+            <h1 class="brand-text">Yuzaki <span>Export</span></h1>
+        </a>
+    </div>
+
+    <ul class="nav-links">
+        <li><a href="{{ url_for('Index') }}">Início</a></li>
+        <li><a href="{{ url_for('Loja') }}">Loja</a></li>
+        <li><a href="{{ url_for('Privacidade') }}">Documentação Legal</a></li>
+        <li><a href="{{ url_for('Contacto') }}">Contacto</a></li>
+
+        {% if session.get('user_id') %}
+<li class="dropdown">
+    <div class="dropbtn">
+        <i class="fas fa-user-circle"></i> {{ session['user_name'] }} 
+        {% if notificacoes_count > 0 %}
+            <span class="notification-badge">{{ notificacoes_count }}</span>
+        {% endif %}
+        <i class="fas fa-caret-down"></i>
+    </div>
+    <div class="dropdown-content">
+        <p class="dropdown-label">Minha Conta</p>
+        
+        <a href="{{ url_for('VerNotificacoes') }}" class="notification-link">
+            <i class="fas fa-bell"></i> Notificações
+            {% if notificacoes_count > 0 %}
+                <span class="count">{{ notificacoes_count }}</span>
+            {% endif %}
+        </a>
+        
+        <a href="{{ url_for('Social') }}" class="nav-social-link">
+    <i class="fas fa-users"></i> SOCIAL
+    {% if total_pedidos_pendentes > 0 %}
+        <span class="badge-social">{{ total_pedidos_pendentes }}</span>
+    {% endif %}
+</a>
+
+        <div class="divider"></div>
+        <a href="{{ url_for('Biblioteca') }}"><i class="fas fa-book"></i> Biblioteca</a>
+        <a href="{{ url_for('Perfil') }}"><i class="fas fa-user-cog"></i> Perfil</a>
+        <a href="{{ url_for('VerCarrinho') }}">
+            <i class="fas fa-shopping-cart"></i> Carrinho 
+        </a>
+
+        {% if session.get('user_email') == ADMIN_EMAIL %}
+            <div class="divider"></div>
+            <a href="{{ url_for('Admin') }}" style="color: #ff4b2b;">Painel de Gestão</a>
+        {% endif %}
+
+        <div class="divider"></div>
+        <a href="{{ url_for('Sair') }}" class="logout-link">Sair</a>
+    </div>
+</li>
+        {% else %}
+            <li><a href="{{ url_for('Entrar') }}" class="btn-login">Entrar</a></li>
+        {% endif %}
+    </ul>
+</nav>
+
+<main class="container-main">
+    
+    <section class="publish-hero-card">
+        <div class="hero-content">
+            <h2 class="brand-text">És um <span>Desenvolvedor?</span></h2>
+            <p>Partilha as tuas criações, constrói a tua comunidade e monetiza os teus jogos na Yuzaki Export.</p>
+            <div class="hero-features">
+                <span>✅ Monetização</span>
+                <span>✅ Estatísticas</span>
+                <span>✅ Hosting Grátis</span>
+            </div>
+        </div>
+        <div class="hero-action">
+            <a href="{{ url_for('Publicar') }}" class="btn-publish-cta">
+                Publicar Novo Jogo 🚀
+            </a>
+        </div>
+    </section>
+
+    <section class="recent-games-section">
+        <header class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px;">
+            <div>
+                <h2 style="font-size: 2.2rem; margin-bottom: 5px;">Feed de Jogos <span>Gratuitos</span></h2>
+                <p style="color: var(--text-muted);">Explora os projetos mais recentes da nossa comunidade.</p>
+            </div>
+            <a href="{{ url_for('Loja') }}" style="color: var(--primary); text-decoration: none; font-weight: 700;">Ver Loja Completa →</a>
+        </header>
+        
+        <div class="games-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;">
+            {% for jogo in jogos %}
+                <article class="game-card" style="background: var(--bg-card); border-radius: 20px; overflow: hidden; border: 1px solid var(--border); transition: 0.3s;">
+                    <div class="game-thumb" style="height: 160px; background: #1a1d24; display: flex; align-items: center; justify-content: center; font-size: 3rem;">
+                        {% if jogo.capa %}
+                            <img src="{{ url_for('static', filename='uploads/' + jogo.capa) }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        {% else %}
+                            🎮
+                        {% endif %}
+                    </div>
+
+                    <div class="game-info" style="padding: 20px;">
+                        <h3 style="margin-bottom: 10px; font-size: 1.2rem; color: #fff;">{{ jogo.titulo }}</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; min-height: 40px;">
+                            {{ jogo.descricao[:80] if jogo.descricao else 'Sem descrição disponível.' }}...
+                        </p>
+                        
+                        {# LÓGICA DE AQUISIÇÃO #}
+                        {% if meus_downloads and jogo.id in meus_downloads %}
+                            <div class="label-adquirido" style="display: block; text-align: center; padding: 12px; background: rgba(46, 213, 115, 0.1); color: #4cd137; border: 1px solid rgba(76, 209, 55, 0.3); border-radius: 12px; font-weight: 800; font-size: 0.75rem; margin-bottom: 15px;">
+                                <i class="fas fa-check-circle"></i> JÁ NA BIBLIOTECA
+                            </div>
+                            <a href="{{ url_for('Biblioteca') }}" class="btn-download" style="display: block; text-align: center; text-decoration: none; background: #2f3542; color: white; padding: 12px; border-radius: 12px; font-weight: bold; font-size: 0.9rem;">
+                                Jogar Agora
+                            </a>
+                        {% else %}
+                            {% if session.get('user_id') %}
+                                <form action="{{ url_for('AdicionarCarrinho', id_jogo=jogo.id) }}" method="POST">
+                                    <button type="submit" class="btn-download" style="width: 100%; border: none; cursor: pointer; padding: 12px; border-radius: 12px; background: var(--primary); color: white; font-weight: bold; transition: 0.3s;">
+                                        <i class="fas fa-cart-plus"></i> Adicionar ao Carrinho
+                                    </button>
+                                </form>
+                            {% else %}
+                                <a href="{{ url_for('Entrar') }}" class="btn-download" style="background: #353b48; display: block; text-align: center; padding: 12px; border-radius: 12px; text-decoration: none; color: white; font-weight: bold;">
+                                    Entrar para Adquirir
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                        
+                        <div class="meta-tags" style="margin-top: 20px; display: flex; gap: 10px;">
+                            <span class="tag free" style="background: #a3cf06; color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold;">GRÁTIS</span>
+                            <span class="tag" style="background: #2f3542; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem;">{{ jogo.categoria or 'Indie' }}</span>
+                        </div>
+                    </div>
+                </article>
+            {% else %}
+                <div style="grid-column: 1 / -1; text-align: center; padding: 80px; background: rgba(255,255,255,0.02); border: 2px dashed #2d343f; border-radius: 25px;">
+                    <i class="fas fa-ghost" style="font-size: 3rem; color: #2d343f; margin-bottom: 20px;"></i>
+                    <p style="color: var(--text-muted); font-size: 1.1rem;">Ainda não há jogos publicados. Sê o primeiro!</p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+
+<footer style="margin-top: 100px; padding: 40px; text-align: center; border-top: 1px solid var(--border); color: var(--text-muted);">
+    <p>&copy; 2026 Yuzaki Export — O início de uma nova Geração</p>
+</footer>
+
+</body>
+</html>

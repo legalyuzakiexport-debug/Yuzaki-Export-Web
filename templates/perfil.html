@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yuzaki Export — O Meu Perfil</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='perfil.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+
+<nav class="navbar">
+    <div class="nav-logo">
+        <a href="{{ url_for('Index') }}">
+            <div class="logo-img">YE</div>
+            <h1 class="brand-text">Yuzaki <span>Export</span></h1>
+        </a>
+    </div>
+
+    <ul class="nav-links">
+        <li><a href="{{ url_for('Index') }}">Início</a></li>
+        <li><a href="{{ url_for('Loja') }}">Loja</a></li>
+        <li><a href="{{ url_for('Privacidade') }}">Documentação Legal</a></li>
+        <li><a href="{{ url_for('Contacto') }}">Contacto</a></li>
+
+        {% if session.get('user_id') %}
+            <li class="dropdown">
+    <div class="dropbtn">
+        <i class="fas fa-user-circle"></i> {{ session['user_name'] }} 
+        {% if notificacoes_count > 0 %}
+            <span class="notification-badge">{{ notificacoes_count }}</span>
+        {% endif %}
+        <i class="fas fa-caret-down"></i>
+    </div>
+    <div class="dropdown-content">
+        <p class="dropdown-label">Minha Conta</p>
+        
+        <a href="{{ url_for('VerNotificacoes') }}" class="notification-link">
+            <i class="fas fa-bell"></i> Notificações
+            {% if notificacoes_count > 0 %}
+                <span class="count">{{ notificacoes_count }}</span>
+            {% endif %}
+        </a>
+        
+        <a href="{{ url_for('Social') }}" class="nav-social-link">
+    <i class="fas fa-users"></i> SOCIAL
+    {% if total_pedidos_pendentes > 0 %}
+        <span class="badge-social">{{ total_pedidos_pendentes }}</span>
+    {% endif %}
+</a>
+
+        <div class="divider"></div>
+        <a href="{{ url_for('Biblioteca') }}"><i class="fas fa-book"></i> Biblioteca</a>
+        <a href="{{ url_for('Perfil') }}"><i class="fas fa-user-cog"></i> Perfil</a>
+        <a href="{{ url_for('VerCarrinho') }}">
+            <i class="fas fa-shopping-cart"></i> Carrinho 
+        </a>
+
+        {% if session.get('user_email') == ADMIN_EMAIL %}
+            <div class="divider"></div>
+            <a href="{{ url_for('Admin') }}" style="color: #ff4b2b;">Painel de Gestão</a>
+        {% endif %}
+
+        <div class="divider"></div>
+        <a href="{{ url_for('Sair') }}" class="logout-link">Sair</a>
+    </div>
+</li>
+        {% else %}
+            <li><a href="{{ url_for('Entrar') }}" class="btn-login">Entrar</a></li>
+        {% endif %}
+    </ul>
+</nav>
+
+<main class="profile-container">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="flash-message {{ category }}" style="
+        padding: 15px; 
+        margin-bottom: 20px; 
+        border-radius: 8px; 
+        background: rgba(77, 171, 247, 0.1); 
+        border: 1px solid var(--primary); 
+        color: white; 
+        text-align: center;
+        animation: fadeIn 0.5s ease;">
+        <i class="fas fa-info-circle"></i> {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+    <header class="profile-header">
+        <h2 class="brand-text">O Meu <span>Perfil</span></h2>
+        <p>Gere as tuas informações, segurança e vê o teu histórico.</p>
+    </header>
+
+    <section class="profile-main-card">
+        <div class="profile-avatar">
+            {{ user.nome_utilizador[0] | upper }}
+        </div>
+        
+        <div class="profile-details">
+            <h2>{{ user.nome_utilizador }}</h2>
+            
+            <div class="profile-info-row">
+                <strong>Email:</strong> {{ user.email }}
+            </div>
+            <div class="profile-info-row">
+                <strong>Membro desde:</strong> {{ user.data_registo }}
+            </div>
+            
+<div class="profile-actions">
+    <button onclick="toggleEditForm()" class="btn-profile btn-edit">
+        <i class="fas fa-user-edit"></i> Editar Nome
+    </button>
+    <button type="button" onclick="toggleDevPainel()" class="btn-profile btn-dev-panel">
+        <i class="fas fa-terminal"></i> Painel de Criador
+    </button>
+    
+<button onclick="togglePasswordForm()" class="btn-profile btn-security" style="cursor: pointer; border: none;">
+    <i class="fas fa-shield-alt"></i> Segurança da Conta
+</button>
+
+    {% if user.email == 'yuzakisama2007@gmail.com' %}
+    <a href="{{ url_for('Admin') }}" class="btn-profile btn-admin">
+        <i class="fas fa-bolt"></i> Painel Admin
+    </a>
+    {% endif %}
+</div>
+
+            <div id="edit-name-section" class="edit-section" style="margin-top: 20px; display: none;">
+                <form action="{{ url_for('AlterarNome') }}" method="POST">
+                    <label style="font-size: 0.8rem; color: var(--primary);">Novo Nome de Utilizador:</label>
+                    <div class="edit-input-group" style="display: flex; gap: 10px; margin-top: 5px;">
+                        <input type="text" name="novo_nome" placeholder="Mínimo 3 caracteres" required style="background: #0b0e14; border: 1px solid var(--border); color: white; padding: 8px; border-radius: 4px; flex: 1;">
+                        <button type="submit" class="btn-publish" style="width: auto; padding: 0 20px;">Salvar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="edit-password-section" class="edit-section" style="margin-top: 20px; display: none;">
+                <form action="{{ url_for('AlterarSenha') }}" method="POST">
+                    <label style="font-size: 0.8rem; color: var(--primary);">Nova Palavra-Passe:</label>
+                    <div class="edit-input-group" style="display: flex; flex-direction: column; gap: 10px; margin-top: 5px;">
+                        <input type="password" name="nova_senha" placeholder="Nova senha" required style="background: #0b0e14; border: 1px solid var(--border); color: white; padding: 8px; border-radius: 4px;">
+                        <input type="password" name="confirmar_senha" placeholder="Confirmar nova senha" required style="background: #0b0e14; border: 1px solid var(--border); color: white; padding: 8px; border-radius: 4px;">
+                        <button type="submit" class="btn-download" style="width: 100%;">Atualizar Segurança</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <div class="stats-grid" style="margin-top: 30px;">
+        <div class="stats-card">
+    <p class="stats-label">JOGOS NA COLEÇÃO</p>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <span style="font-size: 2.5rem; font-weight: 800; color: #4dabf7;">
+            {{ num_jogos }}
+        </span>
+        <i class="fas fa-gamepad" style="font-size: 1.5rem; color: var(--text-muted);"></i>
+    </div>
+</div>
+        <div class="stat-box" style="border-left: 4px solid #a3cf06;">
+            <span class="stat-number">{{ "%.2f"|format(investimento) }}€</span>
+            <span class="stat-label">Total Investido</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-number">#{{ user.id }}</span>
+            <span class="stat-label">ID de Utilizador</span>
+        </div>
+    </div>
+
+    <section class="history-section" style="margin-top: 40px; background: var(--bg-card); padding: 25px; border-radius: 15px; border: 1px solid var(--border);">
+        <h3 class="brand-text" style="font-size: 1.5rem; margin-bottom: 20px;"><i class="fas fa-receipt"></i> Histórico de <span>Compras</span></h3>
+        <table style="width: 100%; border-collapse: collapse; color: var(--text-main);">
+            <thead>
+                <tr style="text-align: left; border-bottom: 2px solid var(--border); color: var(--primary); font-size: 0.8rem;">
+                    <th style="padding: 10px;">PRODUTO</th>
+                    <th>DATA</th>
+                    <th style="text-align: right;">PREÇO</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in historico %}
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <td style="padding: 15px 10px;">
+                        <span style="font-weight: bold; color: #fff;">{{ item.titulo }}</span>
+                    </td>
+                    <td style="color: var(--text-muted); font-size: 0.9rem;">
+                        {{ item.data_pagamento.strftime('%d/%m/%Y') }}
+                    </td>
+                    <td style="text-align: right; font-weight: bold; color: #a3cf06;">
+                        {{ "%.2f"|format(item.preco) }}€
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3" style="padding: 40px; text-align: center; color: var(--text-muted);">Ainda não tens compras registadas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</main>
+
+<script>
+// Função para o novo botão do Painel de Criador
+function toggleDevPainel() {
+    window.location.href = "{{ url_for('DeveloperPanel') }}";
+}
+
+// Funções existentes para os formulários de edição
+function toggleEditForm() {
+    const nameSection = document.getElementById('edit-name-section');
+    const passSection = document.getElementById('edit-password-section');
+    
+    // Se o formulário de nome estiver fechado, abre-o e fecha o de senha
+    if (nameSection.style.display === 'none' || nameSection.style.display === '') {
+        nameSection.style.display = 'block';
+        passSection.style.display = 'none';
+    } else {
+        nameSection.style.display = 'none';
+    }
+}
+
+function togglePasswordForm() {
+    const nameSection = document.getElementById('edit-name-section');
+    const passSection = document.getElementById('edit-password-section');
+    
+    // Se o formulário de senha estiver fechado, abre-o e fecha o de nome
+    if (passSection.style.display === 'none' || passSection.style.display === '') {
+        passSection.style.display = 'block';
+        nameSection.style.display = 'none';
+    } else {
+        passSection.style.display = 'none';
+    }
+}
+</script>
+
+</body>
+</html>

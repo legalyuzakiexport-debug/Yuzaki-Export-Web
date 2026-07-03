@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar | Yuzaki Export</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='entrar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='animacao.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<div class="language-selector">
+    <button class="lang-btn">
+        <img src="https://flagcdn.com/w20/pt.png" id="current-lang-flag"> 
+        <span id="current-lang-text">PT</span>
+        <i class="fas fa-chevron-down"></i>
+    </button>
+    <ul class="lang-options">
+        <li onclick="changeLanguage('pt', 'https://flagcdn.com/w20/pt.png', 'PT')">
+            <img src="https://flagcdn.com/w20/pt.png"> Português
+        </li>
+        <li onclick="changeLanguage('en', 'https://flagcdn.com/w20/gb.png', 'EN')">
+            <img src="https://flagcdn.com/w20/gb.png"> English
+        </li>
+        <li onclick="changeLanguage('es', 'https://flagcdn.com/w20/es.png', 'ES')">
+            <img src="https://flagcdn.com/w20/es.png"> Español
+        </li>
+        <li onclick="changeLanguage('jp', 'https://flagcdn.com/w20/jp.png', 'JP')">
+            <img src="https://flagcdn.com/w20/jp.png"> 日本語
+        </li>
+    </ul>
+</div>
+
+<audio id="som-entrada" preload="auto">
+    <source src="{{ url_for('static', filename='audio/entrada.mp3') }}" type="audio/mpeg">
+</audio>
+
+<div id="intro-overlay" class="intro-overlay">
+    <div class="intro-content">
+        <img src="{{ url_for('static', filename='img/logo_yuzaki.png') }}" alt="Yuzaki Logo" class="intro-logo">
+        <div class="loader-wrapper">
+            <div class="loader-line"></div>
+        </div>
+        <p class="status-text" data-i18n="motores">A preparar motores de exportação...</p>
+    </div>
+</div>
+
+<div class="container">
+    <h2 data-i18n="titulo">Entrar</h2>
+    
+    <form action="{{ url_for('Entrar') }}" method="POST" onsubmit="executarAnimacao(event)">
+        <input type="email" name="email" data-i18n="email" placeholder="O teu email" required>
+        <input type="password" name="password" data-i18n="senha" placeholder="A tua senha" required>
+        
+        <div class="forgot-container">
+            <a href="{{ url_for('EsqueciSenha') }}" class="forgot-link" data-i18n="esqueci">Esqueci minha senha</a>
+        </div>
+
+        <button type="submit" id="btn-entrar" data-i18n="entrar">Entrar</button>
+    </form>
+    
+    <div class="footer-link">
+        <p>
+            <span data-i18n="nao_tem_conta">Não tem conta?</span> 
+            <a href="{{ url_for('Registar') }}" data-i18n="crie_aqui">Crie uma aqui</a>
+        </p>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/traducao.js') }}"></script>
+<script>
+function executarAnimacao(event) {
+    if (event) event.preventDefault(); 
+    
+    const form = event.target; 
+    const overlay = document.getElementById('intro-overlay');
+    const som = document.getElementById('som-entrada');
+
+    const dispararTudo = () => {
+        overlay.classList.add('active');
+        if (som) {
+            som.volume = 0.5;
+            som.play().catch(e => console.log("Áudio pendente de interação"));
+        }
+
+        setTimeout(() => {
+            overlay.classList.add('exit');
+            setTimeout(() => {
+                form.submit();
+            }, 700);
+        }, 2200);
+    };
+
+    // Sincroniza com o estado do áudio
+    if (som && som.readyState >= 3) {
+        dispararTudo();
+    } else {
+        dispararTudo(); 
+    }
+}
+</script>    
+</body>
+</html>

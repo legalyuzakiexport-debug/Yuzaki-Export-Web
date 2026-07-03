@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon/yuzaki_export.ico') }}">
+    <meta charset="UTF-8">
+    <title>YE — Gestão de Jogo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dev_acao.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-logo">
+        <a href="{{ url_for('Index') }}">
+            <div class="logo-img">YE</div>
+            <h1 class="brand-text">Yuzaki <span>Export</span></h1>
+        </a>
+    </div>
+    <ul class="nav-links">
+        <li><a href="{{ url_for('Index') }}">Início</a></li>
+        <li><a href="{{ url_for('Loja') }}">Loja</a></li>
+        <li><a href="{{ url_for('DeveloperPanel') }}" class="active">Painel Criador</a></li>
+    </ul>
+</nav>
+
+<div class="acao-container">
+    <a href="{{ url_for('DeveloperPanel') }}" class="back-link">
+        <i class="fas fa-chevron-left"></i> Voltar ao Painel
+    </a>
+
+    <h2>Gerir: <span>{{ jogo['titulo'] }}</span></h2>
+
+    <form method="POST">
+        <div class="form-group">
+            <label>Nome do Projeto</label>
+            <input type="text" name="titulo" value="{{ jogo['titulo'] }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Descrição Detalhada</label>
+            <textarea name="descricao" rows="6">{{ jogo['descricao'] }}</textarea>
+        </div>
+
+        <div style="max-width: 300px;">
+            <div class="form-group">
+                <label>Preço Base (€)</label>
+                <input type="number" step="0.01" name="preco" value="{{ jogo['preco'] }}" required>
+            </div>
+        </div>
+
+        <div style="max-width: 300px;">
+</div>
+
+<div class="form-group" style="margin-top: 20px;">
+    <label><i class="fas fa-tags"></i> Categoria do Projeto</label>
+    <select name="categoria_id" required class="edit-select" style="width: 100%; padding: 12px; background: #05070a; border: 1px solid #1b2838; color: white; border-radius: 8px;">
+        <option value="" disabled>Seleciona uma categoria...</option>
+        {% for cat in categorias %}
+            <option value="{{ cat.id }}" {% if jogo.categoria_id == cat.id %} selected {% endif %}>
+                {{ cat.nome }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
+
+<div class="promo-section">
+
+        <div class="promo-section">
+            <label style="color: var(--yuzaki-green); font-size: 1rem;"><i class="fas fa-bolt"></i> Campanhas de Promoção</label>
+            <div class="promo-grid">
+                <div class="form-group">
+                    <label>Percentagem (%)</label>
+                    <input type="number" name="desconto" value="{{ jogo['desconto_percentual'] or 0 }}" min="0" max="95">
+                </div>
+                <div class="form-group">
+                    <label>Início</label>
+                    <input type="date" name="promo_inicio" value="{{ jogo['promo_inicio'] }}">
+                </div>
+                <div class="form-group">
+                    <label>Término</label>
+                    <input type="date" name="promo_fim" value="{{ jogo['promo_fim'] }}">
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-save">Aplicar Configurações</button>
+    </form>
+
+    <div class="danger-zone">
+        <h3>Zona de Risco</h3>
+        <p>A remoção do jogo é permanente e afeta todos os registos de vendas.</p>
+        <form method="POST" onsubmit="return confirm('Desejas mesmo apagar este jogo?');">
+            <button type="submit" name="confirmar_eliminar" class="btn-delete">Eliminar Permanentemente</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
