@@ -11,7 +11,7 @@ from utils import (enviar_email_sistema, enviar_recibo,
                    enviar_contacto_suporte, enviar_recuperacao_senha, enviar_notificacao_amizade)
 
 app = Flask(__name__)
-app.secret_key = 'yuzaki_export_key_2024'
+app.secret_key = os.environ.get('SECRET_KEY', 'yuzaki_export_key_2024')
 
 # --- CONFIGURAÇÕES DO SISTEMA ---
 ADMIN_EMAIL = "yuzakisama2007@gmail.com"
@@ -88,7 +88,7 @@ def Entrar():
                 msg.html = render_template('emails/codigo_2fa.html', 
                                            nome=user['nome_utilizador'], 
                                            codigo=codigo_2fa)
-                mail.send(msg)
+                # mail.send(msg)
                 
                 flash("Enviámos um código de segurança para o teu e-mail.", "info")
                 return redirect(url_for('Verificar2FA'))
@@ -149,7 +149,7 @@ def Registar():
             """, (nome, email, senha_hash, agora.date(), agora.time()))
             conn.commit()
             
-            enviar_email_sistema(mail, "Bem-vindo ao Yuzaki Export!", email, 'emails/boas_vindas.html', nome=nome)
+            # enviar_email_sistema(mail, "Bem-vindo ao Yuzaki Export!", email, 'emails/boas_vindas.html', nome=nome)
             flash("Conta criada com sucesso!", "success")
             return redirect(url_for('Entrar'))
         except Exception as e:
