@@ -2,13 +2,12 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 import os
 import secrets
 from datetime import datetime, timedelta, date
-from flask_mail import Mail
 from werkzeug.security import generate_password_hash, check_password_hash
 import random
-from flask_mail import Mail, Message
 from database import DB_Ligar
-from utils import (enviar_email_sistema, enviar_recibo, 
-                   enviar_contacto_suporte, enviar_recuperacao_senha, enviar_notificacao_amizade)
+# Importações simplificadas (sem o objeto 'mail')
+from utils import (enviar_recibo, enviar_contacto_suporte, 
+                   enviar_recuperacao_senha, enviar_notificacao_amizade)
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'yuzaki_export_key_2024')
@@ -21,28 +20,24 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-# --- CONFIGURAÇÃO DE E-MAIL SEGURA ---
-mail = Mail()
-try:
-    app.config['MAIL_SERVER'] = 'smtp-relay.brevo.com'
-    app.config['MAIL_PORT'] = 587
-    app.config['MAIL_USE_TLS'] = True
-    app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
-    app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
-    app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME')
-    app.config['MAIL_TIMEOUT'] = 5
-    mail.init_app(app)
-except Exception:
-    mail = None # Se falhar, o site não trava
+# --- FIM DA CONFIGURAÇÃO DE E-MAIL (Flask-Mail removido) ---
+# A comunicação de e-mail agora é feita exclusivamente via utils.py (API Brevo)
 
 def calcular_preco_atual(jogo):
     hoje = date.today()
-    if jogo.get('desconto_percentual') and jogo.get('promo_inicio') and jogo.get('promo_fim'):
-        # Garantir que as datas são comparáveis
-        if jogo['promo_inicio'] <= hoje <= jogo['promo_fim']:
+    # Verifica se as datas estão no formato correto (date)
+    inicio = jogo.get('promo_inicio')
+    fim = jogo.get('promo_fim')
+    
+    if jogo.get('desconto_percentual') and inicio and fim:
+        if isinstance(inicio, str): inicio = datetime.strptime(inicio, '%Y-%m-%d').date()
+        if isinstance(fim, str): fim = datetime.strptime(fim, '%Y-%m-%d').date()
+        
+        if inicio <= hoje <= fim:
             desconto = jogo['desconto_percentual']
             preco_original = float(jogo['preco'])
             return round(preco_original * (1 - (desconto / 100)), 2)
+    
     return float(jogo.get('preco', 0))
 
 @app.context_processor
