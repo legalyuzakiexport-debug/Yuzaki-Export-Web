@@ -53,14 +53,13 @@ def utility_processor():
 def Inicial():
     return redirect(url_for('Entrar'))
 
-# 2. ENTRAR (Com interrupção para 2FA - VERSÃO DEBUG)
+# 2. ENTRAR (Com interrupção para 2FA - VERSÃO API BREVO)
 @app.route('/entrar', methods=['GET', 'POST'])
 def Entrar():
     if request.method == 'POST':
         email = request.form.get('email')
         senha = request.form.get('password')
-        print(f"DEBUG: Tentativa de login para {email}") # Aparecerá nos logs do Render
-
+        
         try:
             conn = DB_Ligar()
             cursor = conn.cursor(dictionary=True)
@@ -68,34 +67,43 @@ def Entrar():
             user = cursor.fetchone()
             conn.close()
             
-            if user:
-                print(f"DEBUG: Usuário encontrado: {user['email']}")
-                if check_password_hash(user['palavra_passe'], senha):
-                    print("DEBUG: Senha validada com sucesso.")
-                    codigo_2fa = str(random.randint(100000, 999999))
-                    session['temp_user'] = {'id': user['id'], 'nome': user['nome_utilizador'], 'email': user['email'], 'codigo': codigo_2fa}
+            if user and check_password_hash(user['palavra_passe'], senha):
+                codigo_2fa = str(random.randint(100000, 999999))
+                session['temp_user'] = {
+                    'id': user['id'], 
+                    'nome': user['nome_utilizador'], 
+                    'email': user['email'], 
+                    'codigo': codigo_2fa
+                }
+                
+                # CORREÇÃO AQUI: Usando a nossa função da API em vez do Flask-Mail
+                try:
+                    # Precisas de adicionar esta função ao teu utils.py ou usar uma genérica
+                    from utils import enviar_email_api
+                    sucesso = enviar_email_api(
+                        email, 
+                        "Código de Verificação Yuzaki", 
+                        'emails/codigo_2fa.html', 
+                        nome=user['nome_utilizador'], 
+                        codigo=codigo_2fa
+                    )
                     
-                    # TENTATIVA DE EMAIL
-                    try:
-                        msg = Message('Yuzaki Export — Código de Verificação', recipients=[email])
-                        msg.html = render_template('emails/codigo_2fa.html', nome=user['nome_utilizador'], codigo=codigo_2fa)
-                        mail.send(msg)
-                        flash("Código enviado!", "info")
+                    if sucesso:
+                        flash("Código enviado para o seu e-mail!", "info")
                         return redirect(url_for('Verificar2FA'))
-                    except Exception as e:
-                        print(f"DEBUG: ERRO NO EMAIL: {e}")
-                        # EM CASO DE ERRO DE EMAIL, FORÇA O REDIRECIONAMENTO PARA TESTAR
-                        flash("Erro no envio de email, mas sistema ok (debug).", "info")
-                        return redirect(url_for('Verificar2FA'))
-                else:
-                    print("DEBUG: Senha inválida.")
+                    else:
+                        flash("Erro ao enviar código. Tente novamente.", "error")
+                except Exception as e:
+                    print(f"DEBUG: ERRO NO ENVIO DE EMAIL: {e}")
+                    flash("Erro técnico no envio de e-mail.", "error")
+                
             else:
-                print("DEBUG: Usuário não existe.")
+                flash("Email ou Senha incorretos!", "error")
+                
         except Exception as e:
             print(f"DEBUG: ERRO CRÍTICO NO BANCO: {e}")
             flash("Erro no sistema. Tente novamente.", "error")
         
-        flash("Email ou Senha incorretos!", "error")
     return render_template('entrar.html')
 
 
@@ -488,7 +496,7 @@ def RemoverDoCarrinho(id_jogo):
         flash("Jogo removido do carrinho.", "info")
     return redirect(url_for('VerCarrinho'))
 
-# 14. FINALIZAR A COMPRA
+# 14. FINALIZAR A COMPRA (Corrigido para API Brevo)
 @app.route('/finalizar-compra', methods=['GET', 'POST'])
 def FinalizarCompra():
     if 'user_id' not in session or not session.get('carrinho'):
@@ -501,9 +509,7 @@ def FinalizarCompra():
         conn = DB_Ligar()
         cursor = conn.cursor(dictionary=True)
         
-        # --- BUSCAR DETALHES COMPLETOS (Incluindo dados de promoção) ---
         format_strings = ','.join(['%s'] * len(ids_carrinho))
-        # Adicionei os campos: desconto_percentual, promo_inicio, promo_fim
         cursor.execute(f"""
             SELECT id, titulo, preco, desconto_percentual, promo_inicio, promo_fim 
             FROM jogos 
@@ -531,15 +537,23 @@ def FinalizarCompra():
             """, (user_id, jogo_id, agora.date(), agora.time()))
 
         conn.commit()
-        
-        # --- CHAMADA DA FUNÇÃO DE EMAIL (Passando a lista completa) ---
-        # Certifica-te que 'user_email' está na session!
-        enviar_recibo(session.get('user_email'), session.get('user_name'), lista_jogos_recibo, fatura_id=compra_id)
-        
         conn.close()
         
+        # --- CORREÇÃO: Verificação de sucesso do e-mail ---
+        sucesso_email = enviar_recibo(
+            session.get('user_email'), 
+            session.get('user_name'), 
+            lista_jogos_recibo, 
+            fatura_id=compra_id
+        )
+        
+        if sucesso_email:
+            flash("Pagamento confirmado! O recibo foi enviado para o seu e-mail.", "success")
+        else:
+            # Caso a API falhe, não bloqueamos o utilizador, apenas avisamos que o recibo falhou
+            flash("Pagamento confirmado, mas houve um erro ao enviar o e-mail do recibo.", "warning")
+        
         session.pop('carrinho', None)
-        flash("Pagamento confirmado! O recibo foi enviado para o teu e-mail.", "success")
         return redirect(url_for('Biblioteca'))
 
     except Exception as e:
@@ -652,27 +666,40 @@ def MarcarLida(id):
     conn.close()
     return redirect(url_for('VerNotificacoes'))
 
-# ROTA PARA ENVIAR RESPOSTA À ADMINISTRAÇÃO
+# ROTA PARA ENVIAR RESPOSTA À ADMINISTRAÇÃO (Corrigida para API Brevo)
 @app.route('/notificacao/responder', methods=['POST'])
 def ResponderNotificacao():
-    if not session.get('user_id'): return redirect(url_for('Entrar'))
+    if not session.get('user_id'): 
+        return redirect(url_for('Entrar'))
 
     msg_user = request.form.get('mensagem_resposta')
     notif_id = request.form.get('notificacao_id')
     user_nome = session.get('user_name')
     user_email = session.get('user_email')
 
+    # Importa a tua função utilitária de envio via API
+    from utils import enviar_email_api
+
+    # Construção do corpo da mensagem
+    conteudo = f"O utilizador {user_nome} ({user_email}) respondeu à notificação #{notif_id}:\n\n{msg_user}"
+
     try:
-        msg = Message(f"RESPOSTA APOIO: Notificação #{notif_id}", 
-                      sender=app.config['MAIL_USERNAME'],
-                      recipients=[ADMIN_EMAIL])
+        # Usamos a mesma lógica de sucesso/erro que validámos anteriormente
+        sucesso = enviar_email_api(
+            "admin@yuzaki-export.com", # Substitui pelo e-mail da tua administração
+            f"RESPOSTA APOIO: Notificação #{notif_id}",
+            'emails/resposta_admin.html', # Cria este template simples se necessário
+            mensagem=conteudo
+        )
         
-        msg.body = f"O utilizador {user_nome} ({user_email}) respondeu à notificação #{notif_id}:\n\n{msg_user}"
-        mail.send(msg)
-        
-        flash("A tua resposta foi enviada com sucesso para a equipa de administração!", "success")
+        if sucesso:
+            flash("A tua resposta foi enviada com sucesso para a equipa de administração!", "success")
+        else:
+            flash("Erro ao enviar resposta. Tente novamente mais tarde.", "error")
+            
     except Exception as e:
-        flash(f"Erro ao enviar resposta: {e}", "error")
+        print(f"DEBUG: ERRO NO ENVIO DE RESPOSTA: {e}")
+        flash(f"Erro ao processar envio: {e}", "error")
 
     return redirect(url_for('VerNotificacoes'))
 
@@ -735,11 +762,14 @@ def ProcurarAmigos():
 
     return render_template('procurar_social.html', users=resultados, query=query)
 
-# --- FUNÇÃO DE ENVIO DE EMAIL (Social) ---
+# ROTA PARA ADICIONAR AMIGO (Corrigida para API Brevo)
 @app.route('/social/adicionar/<int:id_alvo>')
 def AdicionarAmigo(id_alvo):
     uid_envia = session.get('user_id')
     if not uid_envia: return redirect(url_for('Entrar'))
+    
+    # Importação necessária aqui
+    from utils import enviar_email_api
     
     conn = DB_Ligar()
     cursor = conn.cursor(dictionary=True)
@@ -749,6 +779,7 @@ def AdicionarAmigo(id_alvo):
         user_remetente = cursor.fetchone()
         
         if not user_remetente:
+            conn.close()
             return redirect(url_for('Social'))
             
         nome_real = user_remetente['nome_utilizador']
@@ -763,21 +794,29 @@ def AdicionarAmigo(id_alvo):
                 VALUES (%s, 'Amizade', %s, FALSE)
             """, (id_alvo, f"{nome_real} enviou-te um pedido!"))
 
-            # 4. ENVIAR EMAIL
+            # 4. ENVIAR EMAIL (Usando a API Brevo)
             cursor.execute("SELECT email FROM utilizadores WHERE id = %s", (id_alvo,))
             alvo = cursor.fetchone()
             
             if alvo and alvo['email']:
-                enviar_notificacao_amizade(mail, alvo['email'], nome_real)
+                # Substituímos a função antiga pela chamada via API
+                enviar_email_api(
+                    alvo['email'], 
+                    "Novo Pedido de Amizade", 
+                    'emails/pedido_amizade.html', 
+                    nome_remetente=nome_real
+                )
             
             conn.commit()
             flash(f"Pedido enviado para o utilizador!", "success")
             
     except Exception as e:
-        print(f"Erro ao processar: {e}")
+        print(f"Erro ao processar amizade: {e}")
+        flash(f"Erro ao processar: {e}", "error")
     finally:
         conn.close()
     return redirect(url_for('Social'))
+  
 # 4. GERIR PEDIDOS (ACEITAR/RECUSAR)
 @app.route('/social/gerir/<int:id>/<acao>')
 def GerirAmizade(id, acao):
@@ -853,6 +892,7 @@ def EnviarMensagem():
         conn.close()
     
     return redirect(url_for('ChatAmigo', amigo_id=amigo_id))
+  
 # 17. PERFIL
 @app.route('/perfil')
 def Perfil():
@@ -899,7 +939,7 @@ def Perfil():
                            investimento=investimento, 
                            historico=historico)
 
-# 18. ALTERAR NOME
+# 18. ALTERAR NOME (Corrigida para API Brevo)
 @app.route('/perfil/alterar-nome', methods=['POST'])
 def AlterarNome():
     if 'user_id' not in session: return redirect(url_for('Entrar'))
@@ -918,18 +958,20 @@ def AlterarNome():
 
             session['user_name'] = novo_nome
             
-            # Envio do email (dentro de um try para não travar se o SMTP falhar)
+            # --- CORREÇÃO: Envio via API Brevo ---
+            from utils import enviar_email_api
+            
             try:
-                enviar_email_sistema(
-                    mail, 
-                    "Segurança: Nome de Utilizador Alterado", 
+                enviar_email_api(
                     email_user, 
+                    "Segurança: Nome de Utilizador Alterado", 
                     'emails/notificacao_perfil.html', 
                     nome=novo_nome,
                     data_alteracao=datetime.now().strftime('%d/%m/%Y %H:%M')
                 )
             except Exception as e_mail:
-                print(f"Erro ao enviar email: {e_mail}")
+                print(f"DEBUG: Erro ao enviar email de notificação: {e_mail}")
+                # Não bloqueamos a atualização do perfil se o e-mail falhar
 
             flash("Nome atualizado com sucesso!", "success")
         except Exception as e:
@@ -940,20 +982,43 @@ def AlterarNome():
             
     return redirect(url_for('Perfil'))
 
-# 19. ALTERAR SENHA (PERFIL)
+# 19. ALTERAR SENHA (PERFIL) - Corrigida para API Brevo
 @app.route('/perfil/alterar-senha', methods=['POST'])
 def AlterarSenha():
-    if 'user_id' not in session: return redirect(url_for('Entrar'))
+    if 'user_id' not in session: 
+        return redirect(url_for('Entrar'))
+    
     nova_senha = request.form.get('nova_senha')
     if nova_senha:
+        # Importação da função de API
+        from utils import enviar_email_api
+        
+        # Hash da senha com Werkzeug
         senha_hash = generate_password_hash(nova_senha)
-        conn = DB_Ligar()
-        cursor = conn.cursor()
-        cursor.execute("UPDATE utilizadores SET palavra_passe = %s WHERE id = %s", (senha_hash, session['user_id']))
-        conn.commit()
-        conn.close()
-        enviar_email_sistema(mail, "Senha Alterada", session['user_email'], 'emails/senha_alterada.html', nome=session['user_name'])
-        flash("Senha atualizada!", "success")
+        
+        try:
+            conn = DB_Ligar()
+            cursor = conn.cursor()
+            cursor.execute("UPDATE utilizadores SET palavra_passe = %s WHERE id = %s", (senha_hash, session['user_id']))
+            conn.commit()
+            conn.close()
+            
+            # Envio do e-mail de notificação de segurança
+            try:
+                enviar_email_api(
+                    session['user_email'], 
+                    "Segurança: Senha Alterada", 
+                    'emails/senha_alterada.html', 
+                    nome=session['user_name']
+                )
+            except Exception as e_mail:
+                print(f"Erro ao notificar alteração de senha: {e_mail}")
+            
+            flash("Senha atualizada com sucesso!", "success")
+        except Exception as e:
+            print(f"Erro na base de dados: {e}")
+            flash("Erro ao atualizar a senha.", "danger")
+            
     return redirect(url_for('Perfil'))
 
 # 20. ELIMINAR CONTA
@@ -1018,7 +1083,7 @@ def AdminApagarJogo(id):
         
     return render_template('admin_decisao.html', jogo=jogo)
 
-# 22.1 ADMIN — PROCESSAR ELIMINAÇÃO E EMAIL
+# ROTA CORRIGIDA (Utilizando a API Brevo)
 @app.route('/admin/confirmar-acao/<int:id>', methods=['POST'])
 def AdminConfirmarAcao(id):
     if session.get('user_email') != ADMIN_EMAIL:
@@ -1028,6 +1093,9 @@ def AdminConfirmarAcao(id):
     observacao_admin = request.form.get('detalhes') 
     email_dono = request.form.get('email_dono')
     titulo_jogo = request.form.get('titulo_jogo')
+
+    # Importa a função utilitária da API
+    from utils import enviar_email_api
 
     try:
         conn = DB_Ligar()
@@ -1049,13 +1117,18 @@ def AdminConfirmarAcao(id):
             cursor.execute("UPDATE jogos SET estado = %s WHERE id = %s", (acao_escolhida, id))
             msg_status = acao_escolhida.capitalize()
 
-        # 3. ENVIO DO EMAIL
-        msg = Message(f"Yuzaki Export - Notificação: {titulo_jogo}", recipients=[email_dono])
-        msg.html = render_template('emails/notificacao_admin.html', 
-                                   titulo_jogo=titulo_jogo, 
-                                   motivo=msg_status, 
-                                   detalhes=observacao_admin)
-        mail.send(msg)
+        # 3. ENVIO DO EMAIL (Via API Brevo)
+        try:
+            enviar_email_api(
+                email_dono,
+                f"Yuzaki Export - Notificação: {titulo_jogo}",
+                'emails/notificacao_admin.html',
+                titulo_jogo=titulo_jogo,
+                motivo=msg_status,
+                detalhes=observacao_admin
+            )
+        except Exception as e_mail:
+            print(f"Erro ao enviar email de moderação: {e_mail}")
 
         # 4. CRIAR NOTIFICAÇÃO NO SITE
         if id_autor:
@@ -1087,15 +1160,19 @@ def AdminDecisaoUser(id):
     
     return render_template('admin_decisao_user.html', u=u)
 
-# ROTA 2: Processar a ação (Banir ou Suspender)
+# ROTA 2: Processar a ação (Banir ou Suspender) - Corrigida para API Brevo
 @app.route('/admin/confirmar-acao-user/<int:id>', methods=['POST'])
 def AdminConfirmarAcaoUser(id):
-    if session.get('user_email') != ADMIN_EMAIL: abort(403)
+    if session.get('user_email') != ADMIN_EMAIL: 
+        abort(403)
 
     acao = request.form.get('motivo')
     detalhes = request.form.get('detalhes')
     email_user = request.form.get('email_user')
     nome_user = request.form.get('nome_user')
+
+    # Importa a função da API
+    from utils import enviar_email_api
 
     try:
         conn = DB_Ligar()
@@ -1115,19 +1192,28 @@ def AdminConfirmarAcaoUser(id):
             msg_flash = f"Estado do utilizador {nome_user} atualizado para {acao}."
 
         conn.commit()
+        conn.close()
 
-        msg = Message(f"Yuzaki Export — Atualização de Conta", recipients=[email_user])
-        msg.html = render_template('emails/notificacao_admin.html', 
-                                   titulo_jogo="Sua Conta", 
-                                   motivo=acao.upper(), 
-                                   detalhes=detalhes)
-        mail.send(msg)
+        # Envio do E-mail via API Brevo
+        try:
+            enviar_email_api(
+                email_user, 
+                "Yuzaki Export — Atualização de Conta", 
+                'emails/notificacao_admin.html', 
+                titulo_jogo="Sua Conta", 
+                motivo=acao.upper(), 
+                detalhes=detalhes
+            )
+        except Exception as e_mail:
+            print(f"Erro ao notificar utilizador por email: {e_mail}")
         
         flash(msg_flash, "success")
     except Exception as e:
+        print(f"Erro na DB: {e}")
         flash(f"Erro: {e}", "error")
     finally:
-        conn.close()
+        if 'conn' in locals() and conn.is_connected():
+            conn.close()
 
     return redirect(url_for('Admin'))
 
@@ -1198,15 +1284,33 @@ def Publicar():
     finally:
         if conn: conn.close()
 
-# 25. CONTACTO SUPORTE
+# 25. CONTACTO SUPORTE (Corrigida para API Brevo)
 @app.route('/contacto', methods=['GET', 'POST'])
 def Contacto():
-    if 'user_id' not in session: return redirect(url_for('Entrar'))
+    if 'user_id' not in session: 
+        return redirect(url_for('Entrar'))
+    
     if request.method == 'POST':
-        if enviar_contacto_suporte(mail, session.get('user_name'), session.get('user_email'), 
-                                    request.form.get('assunto'), request.form.get('mensagem')):
+        # Importa a função da API
+        from utils import enviar_email_api
+        
+        # Envio direto via API (sem passar o objeto 'mail')
+        sucesso = enviar_email_api(
+            "admin@yuzaki-export.com", # Email do teu suporte
+            f"Suporte: {request.form.get('assunto')}",
+            'emails/contacto_suporte.html',
+            nome=session.get('user_name'),
+            email_remetente=session.get('user_email'),
+            mensagem=request.form.get('mensagem')
+        )
+        
+        if sucesso:
             flash("Mensagem enviada com sucesso!", "success")
+        else:
+            flash("Ocorreu um erro ao enviar a mensagem. Tenta novamente mais tarde.", "error")
+            
         return redirect(url_for('Contacto'))
+        
     return render_template('contacto.html')
 
 # 26. Painel de Desenvolvedor
