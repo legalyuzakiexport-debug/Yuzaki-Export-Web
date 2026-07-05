@@ -23,12 +23,12 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 # CONFIGURAÇÃO DE E-MAIL
 app.config.update(
-    MAIL_SERVER='smtp.gmail.com',
-    MAIL_PORT=587,
+    MAIL_SERVER=os.environ.get('MAIL_SERVER'),
+    MAIL_PORT=int(os.environ.get('MAIL_PORT', 587)),
     MAIL_USE_TLS=True,
-    MAIL_USERNAME='yuzakisama2007@gmail.com',
-    MAIL_PASSWORD='jgjttjeowqbjiqwx', 
-    MAIL_DEFAULT_SENDER='yuzakisama2007@gmail.com'
+    MAIL_USERNAME=os.environ.get('MAIL_USERNAME'),
+    MAIL_PASSWORD=os.environ.get('MAIL_PASSWORD'),
+    MAIL_DEFAULT_SENDER=os.environ.get('MAIL_USERNAME')
 )
 mail = Mail(app)
 
