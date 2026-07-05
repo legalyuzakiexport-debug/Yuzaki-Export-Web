@@ -22,18 +22,18 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
 # --- CONFIGURAÇÃO DE E-MAIL SEGURA ---
-# Mantenha o mail inicializado aqui
-mail = Mail(app)
-
-# CONFIGURAÇÃO DE E-MAIL (FORÇADA PARA EVITAR ERROS)
-app.config['MAIL_SERVER'] = 'smtp-relay.brevo.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME')
-# O segredo para não dar "Worker Timeout" é reduzir o tempo de espera:
-app.config['MAIL_TIMEOUT'] = 5
+mail = Mail()
+try:
+    app.config['MAIL_SERVER'] = 'smtp-relay.brevo.com'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+    app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME')
+    app.config['MAIL_TIMEOUT'] = 5
+    mail.init_app(app)
+except Exception:
+    mail = None # Se falhar, o site não trava
 
 def calcular_preco_atual(jogo):
     hoje = date.today()
