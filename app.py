@@ -161,32 +161,51 @@ def Sair():
     session.clear()
     return redirect(url_for('Entrar'))
 
-# 5. ESQUECI A SENHA
+# 5. ESQUECI A SENHA (VERSÃO ROBUSTA)
 @app.route('/esqueci-senha', methods=['GET', 'POST'])
 def EsqueciSenha():
     if request.method == 'POST':
         email = request.form.get('email')
-        conn = DB_Ligar()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT id, nome_utilizador FROM utilizadores WHERE email = %s", (email,))
-        user = cursor.fetchone()
-        
-        if user:
-            token = secrets.token_urlsafe(32)
-            validade = datetime.now() + timedelta(hours=1)
-            cursor.execute("DELETE FROM tokens_recuperacao WHERE utilizador_id = %s", (user['id'],))
-            cursor.execute("""
-                INSERT INTO tokens_recuperacao (utilizador_id, token, data_expiracao) 
-                VALUES (%s, %s, %s)
-            """, (user['id'], token, validade))
-            conn.commit()
+        conn = None
+        try:
+            conn = DB_Ligar()
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("SELECT id, nome_utilizador FROM utilizadores WHERE email = %s", (email,))
+            user = cursor.fetchone()
             
-            link = url_for('RedefinirSenha', token=token, _external=True)
-            enviar_recuperacao_senha(mail, email, user['nome_utilizador'], link)
-            
-        flash("Se o e-mail estiver correto, receberás instruções.", "success")
-        conn.close()
-        return redirect(url_for('Entrar'))
+            if user:
+                print(f"DEBUG: Usuário encontrado para recuperação: {user['email']}")
+                token = secrets.token_urlsafe(32)
+                validade = datetime.now() + timedelta(hours=1)
+                
+                cursor.execute("DELETE FROM tokens_recuperacao WHERE utilizador_id = %s", (user['id'],))
+                cursor.execute("INSERT INTO tokens_recuperacao (utilizador_id, token, data_expiracao) VALUES (%s, %s, %s)", 
+                               (user['id'], token, validade))
+                conn.commit()
+                
+                link = url_for('RedefinirSenha', token=token, _external=True)
+                
+                # Tenta enviar, mas não deixa o erro travar o site
+                try:
+                    enviar_recuperacao_senha(mail, email, user['nome_utilizador'], link)
+                    print("DEBUG: Email de recuperação enviado com sucesso.")
+                except Exception as e:
+                    print(f"DEBUG: ERRO AO ENVIAR EMAIL DE RECUPERAÇÃO: {e}")
+                    flash("Conta encontrada, mas houve um erro interno ao enviar o e-mail.", "error")
+                    return redirect(url_for('EsqueciSenha'))
+            else:
+                print("DEBUG: E-mail não encontrado na base de dados.")
+                
+            flash("Se o e-mail estiver correto, receberás instruções.", "success")
+            return redirect(url_for('Entrar'))
+
+        except Exception as e:
+            print(f"DEBUG: ERRO CRÍTICO NA RECUPERAÇÃO: {e}")
+            flash("Ocorreu um erro ao processar seu pedido. Tente novamente.", "error")
+        finally:
+            if conn:
+                conn.close()
+                
     return render_template('esqueceu_senha.html')
 
 # 6. REDEFINIR A SENHA (TOKEN)
