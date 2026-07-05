@@ -55,51 +55,49 @@ def utility_processor():
 def Inicial():
     return redirect(url_for('Entrar'))
 
-# 2. ENTRAR (Com interrupção para 2FA)
+# 2. ENTRAR (Com interrupção para 2FA - VERSÃO DEBUG)
 @app.route('/entrar', methods=['GET', 'POST'])
 def Entrar():
     if request.method == 'POST':
         email = request.form.get('email')
         senha = request.form.get('password')
+        print(f"DEBUG: Tentativa de login para {email}") # Aparecerá nos logs do Render
 
-        conn = DB_Ligar()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM utilizadores WHERE email = %s", (email,))
-        user = cursor.fetchone()
-        conn.close()
-
-        if user and check_password_hash(user['palavra_passe'], senha):
-            # 1. Gerar código aleatório de 6 dígitos
-            codigo_2fa = str(random.randint(100000, 999999))
+        try:
+            conn = DB_Ligar()
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("SELECT * FROM utilizadores WHERE email = %s", (email,))
+            user = cursor.fetchone()
+            conn.close()
             
-            # 2. Guardar dados na SESSION temporária (não logado ainda)
-            session['temp_user'] = {
-                'id': user['id'],
-                'nome': user['nome_utilizador'],
-                'email': user['email'],
-                'codigo': codigo_2fa
-            }
-            
-            # 3. Enviar o email estilizado
-            try:
-                msg = Message('Yuzaki Export — Código de Verificação',
-                              recipients=[email])
-                
-                msg.html = render_template('emails/codigo_2fa.html', 
-                                           nome=user['nome_utilizador'], 
-                                           codigo=codigo_2fa)
-                mail.send(msg)
-                
-                flash("Enviámos um código de segurança para o teu e-mail.", "info")
-                return redirect(url_for('Verificar2FA'))
-                
-            except Exception as e:
-                print(f"Erro ao enviar e-mail: {e}")
-                flash("Houve um problema ao enviar o código. Tenta novamente.", "error")
-                return redirect(url_for('Entrar'))
+            if user:
+                print(f"DEBUG: Usuário encontrado: {user['email']}")
+                if check_password_hash(user['palavra_passe'], senha):
+                    print("DEBUG: Senha validada com sucesso.")
+                    codigo_2fa = str(random.randint(100000, 999999))
+                    session['temp_user'] = {'id': user['id'], 'nome': user['nome_utilizador'], 'email': user['email'], 'codigo': codigo_2fa}
+                    
+                    # TENTATIVA DE EMAIL
+                    try:
+                        msg = Message('Yuzaki Export — Código de Verificação', recipients=[email])
+                        msg.html = render_template('emails/codigo_2fa.html', nome=user['nome_utilizador'], codigo=codigo_2fa)
+                        mail.send(msg)
+                        flash("Código enviado!", "info")
+                        return redirect(url_for('Verificar2FA'))
+                    except Exception as e:
+                        print(f"DEBUG: ERRO NO EMAIL: {e}")
+                        # EM CASO DE ERRO DE EMAIL, FORÇA O REDIRECIONAMENTO PARA TESTAR
+                        flash("Erro no envio de email, mas sistema ok (debug).", "info")
+                        return redirect(url_for('Verificar2FA'))
+                else:
+                    print("DEBUG: Senha inválida.")
+            else:
+                print("DEBUG: Usuário não existe.")
+        except Exception as e:
+            print(f"DEBUG: ERRO CRÍTICO NO BANCO: {e}")
+            flash("Erro no sistema. Tente novamente.", "error")
         
         flash("Email ou Senha incorretos!", "error")
-        
     return render_template('entrar.html')
 
 
@@ -131,7 +129,7 @@ def Verificar2FA():
 
     return render_template('verificar_2fa.html')
 
-# 3. REGISTAR
+# 3. REGISTAR (VERSÃO DEBUG)
 @app.route('/registar', methods=['GET', 'POST'])
 def Registar():
     if request.method == 'POST':
@@ -139,25 +137,24 @@ def Registar():
         email = request.form.get('email')
         senha_hash = generate_password_hash(request.form.get('password'))
         agora = datetime.now()
+        
+        print(f"DEBUG: Iniciando registro para {email}")
 
         try:
             conn = DB_Ligar()
             cursor = conn.cursor()
-            cursor.execute("""
-                INSERT INTO utilizadores (nome_utilizador, email, palavra_passe, data_registo, hora_registo)
-                VALUES (%s, %s, %s, %s, %s)
-            """, (nome, email, senha_hash, agora.date(), agora.time()))
+            cursor.execute("INSERT INTO utilizadores (nome_utilizador, email, palavra_passe, data_registo, hora_registo) VALUES (%s, %s, %s, %s, %s)", 
+                           (nome, email, senha_hash, agora.date(), agora.time()))
             conn.commit()
+            conn.close()
+            print("DEBUG: Registro gravado com sucesso no banco.")
             
-            enviar_email_sistema(mail, "Bem-vindo ao Yuzaki Export!", email, 'emails/boas_vindas.html', nome=nome)
-            flash("Conta criada com sucesso!", "success")
             return redirect(url_for('Entrar'))
         except Exception as e:
+            print(f"DEBUG: ERRO NO REGISTRO: {e}")
             flash(f"Erro ao registar: {e}", "error")
-        finally:
-            conn.close()
+            
     return render_template('registar.html')
-
 # 4. SAIR
 @app.route('/sair')
 def Sair():
