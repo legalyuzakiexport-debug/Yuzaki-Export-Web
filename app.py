@@ -21,17 +21,20 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-# CONFIGURAÇÃO DE E-MAIL
-app.config.update(
-    MAIL_SERVER=os.environ.get('MAIL_SERVER'),
-    MAIL_PORT=int(os.environ.get('MAIL_PORT', 587)),
-    MAIL_USE_TLS=True,
-    MAIL_USERNAME=os.environ.get('MAIL_USERNAME'),
-    MAIL_PASSWORD=os.environ.get('MAIL_PASSWORD'),
-    MAIL_DEFAULT_SENDER=os.environ.get('MAIL_DEFAULT_SENDER'), # Usa o remetente configurado
-    MAIL_TIMEOUT=10 # Impede o servidor de ficar "pendurado"
-)
-mail = Mail(app)
+# CONFIGURAÇÃO DE E-MAIL (FORÇADA E PROTEGIDA)
+try:
+    app.config['MAIL_SERVER'] = 'smtp-relay.brevo.com'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+    app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME')
+    app.config['MAIL_TIMEOUT'] = 5 # Timeout reduzido para não travar o site
+    
+    mail = Mail(app)
+except Exception as e:
+    print(f"DEBUG: ERRO AO CONFIGURAR EMAIL: {e}")
+    mail = None
 
 def calcular_preco_atual(jogo):
     hoje = date.today()
