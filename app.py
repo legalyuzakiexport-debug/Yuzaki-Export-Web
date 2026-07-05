@@ -539,7 +539,7 @@ def FinalizarCompra():
         
         # --- CHAMADA DA FUNÇÃO DE EMAIL (Passando a lista completa) ---
         # Certifica-te que 'user_email' está na session!
-        enviar_recibo(mail, session.get('user_email'), session.get('user_name'), lista_jogos_recibo, fatura_id=compra_id)
+        enviar_recibo(session.get('user_email'), session.get('user_name'), lista_jogos_recibo, fatura_id=compra_id)
         
         conn.close()
         
