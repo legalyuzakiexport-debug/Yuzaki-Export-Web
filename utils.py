@@ -1,6 +1,8 @@
 from flask import render_template
 from flask_mail import Message
 from datetime import datetime, date
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
 
 # --- FUNÇÃO MESTRE PARA ENVIOS (UNIFICADA) ---
 def enviar_email_sistema(mail, assunto, destinatario, template, **kwargs):
@@ -16,19 +18,27 @@ def enviar_email_sistema(mail, assunto, destinatario, template, **kwargs):
 
 # --- FUNÇÕES ESPECÍFICAS ---
 
-def enviar_recuperacao_senha(mail, email_destino, nome_user, link):
-    if not mail:
-        print("ERRO: Objeto mail não inicializado.")
+def enviar_recuperacao_senha(email_destino, nome_user, link):
+    configuration = sib_api_v3_sdk.Configuration()
+    # A tua API KEY (Gera em Brevo > SMTP & API > Chaves API)
+    configuration.api_key['api-key'] = 'A_TUA_CHAVE_API_AQUI' 
+    
+    api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+    
+    send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+        to=[{"email": email_destino, "name": nome_user}],
+        sender={"email": "o-teu-email-verificado@dominio.com", "name": "Yuzaki Export"},
+        subject="Recuperação de Acesso",
+        html_content=f"Olá {nome_user}, clique aqui para recuperar sua senha: {link}"
+    )
+    
+    try:
+        api_instance.send_trans_email(send_smtp_email)
+        return True
+    except ApiException as e:
+        print(f"ERRO API BREVO: {e}")
         return False
         
-    try:
-        msg = Message("Recuperação de Acesso", recipients=[email_destino])
-        msg.html = render_template('emails/recuperar_senha.html', nome=nome_user, link=link)
-        mail.send(msg)
-        return True
-    except Exception as e:
-        print(f"DEBUG: ERRO NO ENVIO DO EMAIL: {e}")
-        return False
 def enviar_notificacao_amizade(mail, email_destino, nome_requisitante):
     return enviar_email_sistema(
         mail, 
