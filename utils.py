@@ -17,22 +17,18 @@ def enviar_email_sistema(mail, assunto, destinatario, template, **kwargs):
 # --- FUNÇÕES ESPECÍFICAS ---
 
 def enviar_recuperacao_senha(mail, email_destino, nome_user, link):
+    if not mail:
+        print("ERRO: Objeto mail não inicializado.")
+        return False
+        
     try:
-        # 1. Tente carregar o template primeiro
-        html_content = render_template('emails/recuperar_senha.html', nome=nome_user, link=link)
-        
-        # 2. Prepare a mensagem
-        msg = Message("Recuperação de Acesso | Yuzaki Export", 
-                      recipients=[email_destino])
-        msg.html = html_content
-        
-        # 3. Envie
+        msg = Message("Recuperação de Acesso", recipients=[email_destino])
+        msg.html = render_template('emails/recuperar_senha.html', nome=nome_user, link=link)
         mail.send(msg)
         return True
     except Exception as e:
-        print(f"DEBUG: ERRO DETALHADO NO ENVIO: {e}")
+        print(f"DEBUG: ERRO NO ENVIO DO EMAIL: {e}")
         return False
-
 def enviar_notificacao_amizade(mail, email_destino, nome_requisitante):
     return enviar_email_sistema(
         mail, 
