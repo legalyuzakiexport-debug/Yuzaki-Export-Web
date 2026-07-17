@@ -5,7 +5,6 @@ from datetime import datetime, timedelta, date
 from werkzeug.security import generate_password_hash, check_password_hash
 import random
 from database import DB_Ligar
-# Importações simplificadas (sem o objeto 'mail')
 from utils import (enviar_recibo, enviar_contacto_suporte, 
                    enviar_recuperacao_senha, enviar_notificacao_amizade)
 
@@ -25,7 +24,6 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 def calcular_preco_atual(jogo):
     hoje = date.today()
-    # Verifica se as datas estão no formato correto (date)
     inicio = jogo.get('promo_inicio')
     fim = jogo.get('promo_fim')
     
@@ -76,9 +74,7 @@ def Entrar():
                     'codigo': codigo_2fa
                 }
                 
-                # CORREÇÃO AQUI: Usando a nossa função da API em vez do Flask-Mail
                 try:
-                    # Precisas de adicionar esta função ao teu utils.py ou usar uma genérica
                     from utils import enviar_email_api
                     sucesso = enviar_email_api(
                         email, 
@@ -197,7 +193,6 @@ def EsqueciSenha():
                 
                 link = url_for('RedefinirSenha', token=token, _external=True)
                 
-                # CORREÇÃO AQUI: Não passamos o 'mail' como argumento
                 try:
                     enviar_recuperacao_senha(email, user['nome_utilizador'], link)
                     print("DEBUG: Email enviado com sucesso.")
@@ -287,7 +282,6 @@ def Loja():
     cursor = conn.cursor(dictionary=True)
     
     # 1. Construção da Query Base com JOIN para as Categorias
-    # Usamos GROUP_CONCAT para o caso de um jogo ter mais que uma categoria
     sql_base = """
         SELECT j.*, GROUP_CONCAT(c.nome SEPARATOR ', ') as categoria_nome 
         FROM jogos j
@@ -334,7 +328,7 @@ def Loja():
     cursor.execute(sql_base, tuple(params))
     jogos = cursor.fetchall()
 
-    # 3. Injetar Comentários (O teu código original estava bom, mantemos aqui)
+    # 3. Injetar Comentários
     for jogo in jogos:
         cursor.execute("""
             SELECT a.comentario, u.nome_utilizador 
@@ -572,7 +566,6 @@ def Biblioteca():
     conn = DB_Ligar()
     cursor = conn.cursor(dictionary=True)
     
-    # Query com JOIN para buscar nomes das categorias concatenados
     sql = """
         SELECT j.*, 
                MAX(d.data_download) as data_download,
@@ -677,18 +670,17 @@ def ResponderNotificacao():
     user_nome = session.get('user_name')
     user_email = session.get('user_email')
 
-    # Importa a tua função utilitária de envio via API
     from utils import enviar_email_api
 
     # Construção do corpo da mensagem
     conteudo = f"O utilizador {user_nome} ({user_email}) respondeu à notificação #{notif_id}:\n\n{msg_user}"
 
     try:
-        # Usamos a mesma lógica de sucesso/erro que validámos anteriormente
+      
         sucesso = enviar_email_api(
-            "admin@yuzaki-export.com", # Substitui pelo e-mail da tua administração
+            "admin@yuzaki-export.com",
             f"RESPOSTA APOIO: Notificação #{notif_id}",
-            'emails/resposta_admin.html', # Cria este template simples se necessário
+            'emails/resposta_admin.html',
             mensagem=conteudo
         )
         
@@ -768,7 +760,6 @@ def AdicionarAmigo(id_alvo):
     uid_envia = session.get('user_id')
     if not uid_envia: return redirect(url_for('Entrar'))
     
-    # Importação necessária aqui
     from utils import enviar_email_api
     
     conn = DB_Ligar()
@@ -799,7 +790,6 @@ def AdicionarAmigo(id_alvo):
             alvo = cursor.fetchone()
             
             if alvo and alvo['email']:
-                # Substituímos a função antiga pela chamada via API
                 enviar_email_api(
                     alvo['email'], 
                     "Novo Pedido de Amizade", 
@@ -1039,6 +1029,7 @@ def EliminarConta():
 # ---------------------------------------------------------
 
 # 21. ADMIN PANEL (Atualizado com JOIN para o Nick)
+
 @app.route('/admin')
 def Admin():
     if session.get('user_email') != ADMIN_EMAIL:
@@ -1469,8 +1460,6 @@ def page_not_found(e):
 @app.errorhandler(403)
 def access_forbidden(e):
     return render_template('403.html'), 403
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
