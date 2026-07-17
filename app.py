@@ -47,7 +47,7 @@ def utility_processor():
 # ---------------------------------------------------------
 
 # 1. INICIAL
-@app.route('/home')
+@app.route('/')
 def Inicial():
     return redirect(url_for('home'))
 
