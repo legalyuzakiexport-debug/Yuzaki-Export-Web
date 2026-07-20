@@ -49,7 +49,7 @@ def utility_processor():
 # 1. INICIAL
 @app.route('/')
 def Inicial():
-    return redirect(url_for('home'))
+    return redirect(url_for('index.html'))
 
 # 2. ENTRAR (Com interrupção para 2FA - VERSÃO API BREVO)
 @app.route('/entrar', methods=['GET', 'POST'])
