@@ -24,6 +24,10 @@
         <li><a href="{{ url_for('Index') }}">Início</a></li>
         <li><a href="{{ url_for('Loja') }}">Loja</a></li>
         <li><a href="{{ url_for('Contacto') }}">Contacto</a></li>
+        <a href="{{ url_for('VerCarrinho') }}">
+                        <i class="fas fa-shopping-cart"></i> Carrinho 
+                        {% if session.get('carrinho') %}<span class="cart-count">{{ session['carrinho']|length }}</span>{% endif %}
+                    </a>
 
         {% if session.get('user_id') %}
             <li class="dropdown">
@@ -34,10 +38,6 @@
                     <p class="dropdown-label">Minha Conta</p>
                     <a href="{{ url_for('Biblioteca') }}"><i class="fas fa-book"></i> Biblioteca</a>
                     <a href="{{ url_for('Perfil') }}"><i class="fas fa-user-cog"></i> Perfil</a>
-                    <a href="{{ url_for('VerCarrinho') }}">
-                        <i class="fas fa-shopping-cart"></i> Carrinho 
-                        {% if session.get('carrinho') %}<span class="cart-count">{{ session['carrinho']|length }}</span>{% endif %}
-                    </a>
                     <div class="divider"></div>
                     <a href="{{ url_for('Sair') }}" class="logout-link">Sair</a>
                 </div>
