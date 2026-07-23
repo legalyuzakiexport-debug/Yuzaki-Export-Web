@@ -1287,7 +1287,7 @@ def Contacto():
         
         # Envio direto via API (sem passar o objeto 'mail')
         sucesso = enviar_email_api(
-            "admin@yuzaki-export.com", # Email do teu suporte
+            "yuzakisama2007@gmail.com", # Email do teu suporte
             f"Suporte: {request.form.get('assunto')}",
             'emails/contacto_admin.html',
             nome=session.get('user_name'),
