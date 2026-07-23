@@ -75,24 +75,6 @@
 </nav>
 
 <main class="profile-container">
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="flash-message {{ category }}" style="
-        padding: 15px; 
-        margin-bottom: 20px; 
-        border-radius: 8px; 
-        background: rgba(77, 171, 247, 0.1); 
-        border: 1px solid var(--primary); 
-        color: white; 
-        text-align: center;
-        animation: fadeIn 0.5s ease;">
-        <i class="fas fa-info-circle"></i> {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-
     <header class="profile-header">
         <h2 class="brand-text">O Meu <span>Perfil</span></h2>
         <p>Gere as tuas informações, segurança e vê o teu histórico.</p>
