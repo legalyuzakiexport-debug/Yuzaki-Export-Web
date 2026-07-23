@@ -33,7 +33,6 @@
     <ul class="nav-links">
         <li><a href="{{ url_for('Index') }}">Início</a></li>
         <li><a href="{{ url_for('Loja') }}">Loja</a></li>
-        <li><a href="{{ url_for('Privacidade') }}">Documentação Legal</a></li>
         <li><a href="{{ url_for('Contacto') }}">Contacto</a></li>
 
         {% if session.get('user_id') %}
