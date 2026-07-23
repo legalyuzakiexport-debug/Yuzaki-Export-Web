@@ -1289,7 +1289,7 @@ def Contacto():
         sucesso = enviar_email_api(
             "admin@yuzaki-export.com", # Email do teu suporte
             f"Suporte: {request.form.get('assunto')}",
-            'emails/contacto_suporte.html',
+            'emails/contacto_admin.html',
             nome=session.get('user_name'),
             email_remetente=session.get('user_email'),
             mensagem=request.form.get('mensagem')
